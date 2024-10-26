@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskService.Models;
+using TaskService.Data;
 
 namespace TaskService.Controllers
 {

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TaskService.Models;
+using TaskService.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
