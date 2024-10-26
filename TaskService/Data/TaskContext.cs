@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TaskService.Models;
 
-public class TaskContext : DbContext
+public class ToDoTaskContext : DbContext
 {
-    public TaskContext(DbContextOptions<TaskContext> options)
+    public ToDoTaskContext(DbContextOptions<ToDoTaskContext> options)
         : base(options)
     {
     }
 
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<ToDoTask> ToDoTasks { get; set; }
 }

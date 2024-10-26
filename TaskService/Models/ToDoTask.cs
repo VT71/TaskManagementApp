@@ -3,7 +3,7 @@ using TaskService.Attributes;
 
 namespace TaskService.Models;
 
-public class Task
+public class ToDoTask
 {
     public long Id { get; set; }
     [StringLength(100)]
