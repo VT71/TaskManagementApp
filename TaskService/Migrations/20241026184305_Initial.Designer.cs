@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskService.Models;
+using TaskService.Data;
 
 #nullable disable
 
 namespace TaskService.Migrations
 {
     [DbContext(typeof(ToDoTaskContext))]
-    [Migration("20241026183320_Initial")]
+    [Migration("20241026184305_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
