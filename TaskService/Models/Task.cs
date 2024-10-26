@@ -10,6 +10,6 @@ public class Task
     public required string Title { get; set; }
     public string? Description { get; set; }
     [FutureDate]
-    public required DateTimeOffset DueDate { get; set; }
+    public required DateTime DueDate { get; set; }
     public bool Completed { get; set; }
 }

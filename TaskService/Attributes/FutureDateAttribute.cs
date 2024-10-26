@@ -7,9 +7,9 @@ public class FutureDateAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value is DateTimeOffset date)
+        if (value is DateTime date)
         {
-            if (date > DateTimeOffset.Now)
+            if (date > DateTime.UtcNow)
             {
                 return ValidationResult.Success;
             }
