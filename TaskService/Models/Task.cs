@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TaskService.Attributes;
 
 namespace TaskService.Models;
 
@@ -8,6 +9,7 @@ public class Task
     [StringLength(100)]
     public required string Title { get; set; }
     public string? Description { get; set; }
+    [FutureDate]
     public required DateTimeOffset DueDate { get; set; }
     public bool Completed { get; set; }
 }
