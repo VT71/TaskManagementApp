@@ -9,6 +9,5 @@ public class ToDoTaskContext : DbContext
         : base(options)
     {
     }
-
-    public DbSet<ToDoTask> ToDoTasks { get; set; }
+    public virtual DbSet<ToDoTask> ToDoTasks { get; set; }
 }
