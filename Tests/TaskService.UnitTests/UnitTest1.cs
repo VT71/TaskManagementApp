@@ -1,17 +1,38 @@
 using TaskService.Data;
 using TaskService.Controllers;
 using TaskService.Services;
+using TaskService.Models;
+
 using Moq;
 using Moq.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TaskService.Models;
 using Microsoft.AspNetCore.Mvc;
+
 namespace TaskService.UnitTests;
 
-public class UnitTest1
+public class ToDoTaskControllerTests
 {
     [Fact]
-    public async Task Test1()
+    public async Task GetEmptyArrayWhenNoTasksExist()
+    {
+        var dbContextMock = new Mock<ToDoTaskContext>(new DbContextOptions<ToDoTaskContext>());
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var tasksSet = new List<ToDoTask>();
+
+        dbContextMock.Setup(x => x.ToDoTasks).ReturnsDbSet(tasksSet);
+
+        var allToDoTasks = await toDoTaskController.GetToDoTasks();
+
+        var okResult = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
+        var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(okResult.Value);
+        Assert.Empty(tasks);
+    }
+
+    [Fact]
+    public async Task GetAllTasksReturnsCorrectAmountSingle()
     {
         var dbContextMock = new Mock<ToDoTaskContext>(new DbContextOptions<ToDoTaskContext>());
 
