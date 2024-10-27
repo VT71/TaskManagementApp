@@ -17,4 +17,9 @@ public class ToDoTaskService
     {
         return await _context.ToDoTasks.AsNoTracking().ToListAsync();
     }
+
+    public async Task<ToDoTask?> GetById(long id)
+    {
+        return await _context.ToDoTasks.FindAsync(id);
+    }
 }

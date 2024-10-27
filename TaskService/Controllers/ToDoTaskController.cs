@@ -24,18 +24,19 @@ namespace TaskService.Controllers
         }
 
         // GET: api/ToDoTask/5
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<ToDoTask>> GetToDoTask(long id)
-        // {
-        //     var toDoTask = await _context.ToDoTasks.FindAsync(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ToDoTask>> GetToDoTask(long id)
+        {
+            var toDoTask = await _service.GetById(id);
 
-        //     if (toDoTask == null)
-        //     {
-        //         return NotFound();
-        //     }
+            if (toDoTask == null)
+            {
+                return NotFound();
+            }
 
-        //     return toDoTask;
-        // }
+            return toDoTask;
+        }
+
 
         // PUT: api/ToDoTask/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
