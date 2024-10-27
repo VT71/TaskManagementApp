@@ -10,6 +10,10 @@ public class ToDoTaskContext : DbContext
     {
     }
 
+    public ToDoTaskContext()
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ToDoTask>().HasData(

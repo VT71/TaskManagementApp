@@ -4,18 +4,34 @@ using TaskService.Services;
 using TaskService.Models;
 
 using Moq;
+using MockQueryable.Moq;
 using Moq.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TaskService.UnitTests;
 
 public class ToDoTaskControllerTests
 {
+    private ToDoTaskContext GetDatabaseContext()
+    {
+        var options = new DbContextOptionsBuilder<ToDoTaskContext>()
+            .UseSqlite("Data Source=testdatabase.dat")
+            .Options;
+
+        var databaseContext = new ToDoTaskContext(options);
+
+        databaseContext.Database.EnsureDeleted();
+        databaseContext.Database.EnsureCreated();
+
+        return databaseContext;
+    }
+
     [Fact]
     public async Task GetEmptyArrayWhenNoTasksExist()
     {
-        var dbContextMock = new Mock<ToDoTaskContext>(new DbContextOptions<ToDoTaskContext>());
+        var dbContextMock = new Mock<ToDoTaskContext>();
 
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
@@ -34,7 +50,7 @@ public class ToDoTaskControllerTests
     [Fact]
     public async Task GetAllTasksReturnsCorrectAmountSingle()
     {
-        var dbContextMock = new Mock<ToDoTaskContext>(new DbContextOptions<ToDoTaskContext>());
+        var dbContextMock = new Mock<ToDoTaskContext>();
 
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
@@ -60,7 +76,7 @@ public class ToDoTaskControllerTests
     [Fact]
     public async Task GetAllTasksReturnsCorrectAmountMultiple()
     {
-        var dbContextMock = new Mock<ToDoTaskContext>(new DbContextOptions<ToDoTaskContext>());
+        var dbContextMock = new Mock<ToDoTaskContext>();
 
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
@@ -88,5 +104,19 @@ public class ToDoTaskControllerTests
         var okResult = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
         var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(okResult.Value);
         Assert.Equal(2, tasks.Count);
+    }
+
+    [Fact]
+    public async Task GetCorrectTaskBasedOnId()
+    {
+        var dbContext = GetDatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var toDoTaskResult = await toDoTaskController.GetToDoTask(1);
+
+        Assert.IsType<ToDoTask>(toDoTaskResult.Value);
+        Assert.Equal(1, toDoTaskResult.Value.Id);
     }
 }
