@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskService.Models;
-using TaskService.Data;
+using TaskService.Services;
 
 namespace TaskService.Controllers
 {
@@ -9,18 +9,18 @@ namespace TaskService.Controllers
     [ApiController]
     public class ToDoTaskController : ControllerBase
     {
-        private readonly ToDoTaskContext _context;
+        ToDoTaskService _service;
 
-        public ToDoTaskController(ToDoTaskContext context)
+        public ToDoTaskController(ToDoTaskService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/ToDoTask
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDoTask>>> GetToDoTasks()
+        public async Task<ActionResult<ICollection<ToDoTask>>> GetToDoTasks()
         {
-            return await _context.ToDoTasks.ToListAsync();
+            return Ok(await _service.GetAll());
         }
 
         // GET: api/ToDoTask/5

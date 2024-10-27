@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskService.Data;
+using TaskService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ToDoTaskContext>(opt =>
     opt.UseSqlite("Data Source=databse.dat"));
+
+builder.Services.AddScoped<ToDoTaskService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
