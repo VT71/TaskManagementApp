@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ToDoTaskContext>(opt =>
-    opt.UseSqlite("Data Source=databse.dat"));
+    opt.UseSqlite("Data Source=database.dat"));
 
 builder.Services.AddScoped<ToDoTaskService>();
 
