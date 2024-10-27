@@ -1,10 +1,10 @@
-namespace Tests;
+namespace TaskService.Tests;
 
-public class UnitTest1
+public class ToDoTaskControllerTests
 {
     [Fact]
     public void Test1()
     {
-
+        Assert.True(true);
     }
 }
