@@ -41,4 +41,8 @@ export class TaskTableComponent implements AfterViewInit {
             this.dataSource.paginator.firstPage();
         }
     }
+
+    convertDateToReadable(date: Date) {
+        return date.toLocaleDateString('en-GB') + ' ' + date.toLocaleTimeString('en-GB').substring(0, 5);
+    }
 }
