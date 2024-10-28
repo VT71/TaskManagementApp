@@ -12,17 +12,19 @@ import {
     MatSnackBar, MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-task-table',
     standalone: true,
-    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule],
+    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule],
     templateUrl: './task-table.component.html',
     styleUrl: './task-table.component.css'
 })
 
 export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'title', 'description', 'dueDate', 'completed'];
+    displayedColumns: string[] = ['id', 'title', 'description', 'dueDate', 'completed', 'options-menu'];
     dataSource: MatTableDataSource<ToDoTask> = new MatTableDataSource();
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
