@@ -7,14 +7,13 @@ using Moq;
 using MockQueryable.Moq;
 using Moq.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TaskService.UnitTests;
 
 public class ToDoTaskControllerTests
 {
-    private ToDoTaskContext GetDatabaseContext()
+    private ToDoTaskContext DatabaseContext()
     {
         var options = new DbContextOptionsBuilder<ToDoTaskContext>()
             .UseSqlite("Data Source=testdatabase.dat")
@@ -109,7 +108,7 @@ public class ToDoTaskControllerTests
     [Fact]
     public async Task GetCorrectTaskBasedOnId()
     {
-        var dbContext = GetDatabaseContext();
+        var dbContext = DatabaseContext();
 
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
@@ -118,5 +117,18 @@ public class ToDoTaskControllerTests
 
         Assert.IsType<ToDoTask>(toDoTaskResult.Value);
         Assert.Equal(1, toDoTaskResult.Value.Id);
+    }
+
+    [Fact]
+    public async Task GetNotFoundWhenNoTaskExists()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var toDoTaskResult = await toDoTaskController.GetToDoTask(999);
+
+        Assert.IsType<NotFoundResult>(toDoTaskResult.Result);
     }
 }
