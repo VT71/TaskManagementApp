@@ -56,7 +56,7 @@ namespace TaskService.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutToDoTask(long id, ToDoTask toDoTask)
         {
-            if (id != toDoTask.Id)
+            if ((id != toDoTask.Id) || !ModelState.IsValid)
             {
                 return BadRequest();
             }

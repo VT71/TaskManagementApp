@@ -252,5 +252,27 @@ public class ToDoTaskControllerTests
 
         Assert.IsType<BadRequestResult>(result);
     }
+
+    [Fact]
+    public async Task GetBadRequestWhenUpdatingInvalidTask()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+        toDoTaskController.ModelState.AddModelError("DueDate", "Date must be in the future");
+
+        var newDueDate = DateTime.Parse("2020-10-27T15:23:59.689Z");
+
+        var getResult = await toDoTaskController.GetToDoTask(1);
+
+        ToDoTask? oldTask = getResult.Value;
+
+        oldTask.DueDate = newDueDate;
+
+        var result = await toDoTaskController.PutToDoTask(1, oldTask);
+
+        Assert.IsType<BadRequestResult>(result);
+    }
 }
 
