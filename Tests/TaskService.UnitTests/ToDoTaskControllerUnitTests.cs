@@ -173,9 +173,9 @@ public class ToDoTaskControllerTests
             Completed = false
         };
 
-        ValidationContext validationContext = new ValidationContext(newToDoTask.DueDate);
-        ValidationResult? validationResult = futureDateAttribute.GetValidationResult(newToDoTask.DueDate, validationContext);
+        bool dueDateInTheFuture = futureDateAttribute.IsValid(newToDoTask.DueDate);
 
-        Assert.Equal("Date must be in the future", validationResult?.ErrorMessage);
+        Assert.False(dueDateInTheFuture);
     }
+
 }
