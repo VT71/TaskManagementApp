@@ -277,7 +277,7 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
-    public async Task TaskDeletedWhenUsingValidId()
+    public async Task GetNoContentWhenDeletingTaskWithValidId()
     {
         var dbContext = DatabaseContext();
 
@@ -289,6 +289,19 @@ public class ToDoTaskControllerTests
 
         Assert.IsType<NoContentResult>(deleteResult);
         Assert.IsType<NotFoundResult>(getResult.Result);
+    }
+
+    [Fact]
+    public async Task GetNotFoundWhenDeletingTaskWithInvalidId()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var deleteResult = await toDoTaskController.DeleteToDoTask(999);
+
+        Assert.IsType<NotFoundResult>(deleteResult);
     }
 }
 
