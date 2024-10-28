@@ -201,4 +201,41 @@ public class ToDoTaskControllerTests
         Assert.IsType<BadRequestObjectResult>(result.Result);
     }
 
+    [Fact]
+    public async Task GetNoContentWhenUpdatingValidTask()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var newTitle = "Task 1 Updated";
+        var newDescription = "Description updated";
+        var newDueDate = DateTime.Parse("2026-10-27T15:23:59.689Z");
+        var newCompletedStatus = true;
+
+        var getResult = await toDoTaskController.GetToDoTask(1);
+
+        ToDoTask? oldTask = getResult.Value;
+
+        oldTask.Title = newTitle;
+        oldTask.Description = newDescription;
+        oldTask.DueDate = newDueDate;
+        oldTask.Completed = newCompletedStatus;
+
+
+        var result = await toDoTaskController.PutToDoTask(1, oldTask);
+
+        var newGetResult = await toDoTaskController.GetToDoTask(1);
+        ToDoTask? newTask = newGetResult.Value;
+
+        Assert.IsType<NoContentResult>(result);
+        Assert.Equal(newTask.Title, newTitle);
+        Assert.Equal(newTask.Description, newDescription);
+        Assert.Equal(newTask.DueDate, newDueDate);
+        Assert.Equal(newTask.Completed, newCompletedStatus);
+    }
+
+    
 }
+
