@@ -37,4 +37,10 @@ public class ToDoTaskService
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteToDoTask(ToDoTask toDoTask)
+    {
+        _context.ToDoTasks.Remove(toDoTask);
+        await _context.SaveChangesAsync();
+    }
 }

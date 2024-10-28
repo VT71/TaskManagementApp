@@ -67,24 +67,18 @@ namespace TaskService.Controllers
         }
 
         // DELETE: api/ToDoTask/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteToDoTask(long id)
-        // {
-        //     var toDoTask = await _context.ToDoTasks.FindAsync(id);
-        //     if (toDoTask == null)
-        //     {
-        //         return NotFound();
-        //     }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteToDoTask(long id)
+        {
+            var toDoTask = await _service.GetById(id);
+            if (toDoTask == null)
+            {
+                return NotFound();
+            }
 
-        //     _context.ToDoTasks.Remove(toDoTask);
-        //     await _context.SaveChangesAsync();
+            await _service.DeleteToDoTask(toDoTask);
 
-        //     return NoContent();
-        // }
-
-        // private bool ToDoTaskExists(long id)
-        // {
-        //     return _context.ToDoTasks.Any(e => e.Id == id);
-        // }
+            return NoContent();
+        }
     }
 }
