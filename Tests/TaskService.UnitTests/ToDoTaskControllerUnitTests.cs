@@ -3,14 +3,9 @@ using TaskService.Controllers;
 using TaskService.Services;
 using TaskService.Models;
 
-using Moq;
-using MockQueryable.Moq;
-using Moq.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using TaskService.Attributes;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace TaskService.UnitTests;
 
@@ -30,82 +25,47 @@ public class ToDoTaskControllerTests
         return databaseContext;
     }
 
+    private async Task RemoveData(ToDoTaskContext toDoTaskContext)
+    {
+        List<ToDoTask> allTasks = await toDoTaskContext.ToDoTasks.ToListAsync();
+
+        for (int i = 0; i < allTasks.Count; i++)
+        {
+            toDoTaskContext.Remove(allTasks[i]);
+        }
+
+        await toDoTaskContext.SaveChangesAsync();
+    }
+
     [Fact]
     public async Task GetEmptyArrayWhenNoTasksExist()
     {
-        var dbContextMock = new Mock<ToDoTaskContext>();
+        var dbContext = DatabaseContext();
 
-        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
-
-        var tasksSet = new List<ToDoTask>();
-
-        dbContextMock.Setup(x => x.ToDoTasks).ReturnsDbSet(tasksSet);
+        await RemoveData(dbContext);
 
         var allToDoTasks = await toDoTaskController.GetToDoTasks();
 
-        var okResult = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
-        var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(okResult.Value);
+        var result = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
+        var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(result.Value);
         Assert.Empty(tasks);
     }
 
     [Fact]
-    public async Task GetAllTasksReturnsCorrectAmountSingle()
+    public async Task GetAllTasksReturnsCorrectAmount()
     {
-        var dbContextMock = new Mock<ToDoTaskContext>();
+        var dbContext = DatabaseContext();
 
-        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
-
-        var tasksSet = new List<ToDoTask>()
-        {
-            new ToDoTask
-            {
-                Id = 1,
-                Title = "Task 1",
-                DueDate = DateTime.Parse("2025-10-27T15:23:59.689Z")
-            }
-        };
-
-        dbContextMock.Setup(x => x.ToDoTasks).ReturnsDbSet(tasksSet);
 
         var allToDoTasks = await toDoTaskController.GetToDoTasks();
 
-        var okResult = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
-        var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(okResult.Value);
-        Assert.Single(tasks);
-    }
-    [Fact]
-    public async Task GetAllTasksReturnsCorrectAmountMultiple()
-    {
-        var dbContextMock = new Mock<ToDoTaskContext>();
-
-        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContextMock.Object);
-        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
-
-        var tasksSet = new List<ToDoTask>()
-        {
-            new ToDoTask
-            {
-                Id = 1,
-                Title = "Task 1",
-                DueDate = DateTime.Parse("2025-10-27T15:23:59.689Z")
-            },
-            new ToDoTask
-            {
-                Id = 2,
-                Title = "Task 2",
-                DueDate = DateTime.Parse("2025-10-27T15:23:59.689Z")
-            }
-        };
-
-        dbContextMock.Setup(x => x.ToDoTasks).ReturnsDbSet(tasksSet);
-
-        var allToDoTasks = await toDoTaskController.GetToDoTasks();
-
-        var okResult = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
-        var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(okResult.Value);
-        Assert.Equal(2, tasks.Count);
+        var result = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
+        var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(result.Value);
+        Assert.Equal(3, tasks.Count);
     }
 
     [Fact]
