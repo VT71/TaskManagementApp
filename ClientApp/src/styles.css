@@ -12,3 +12,9 @@ body,
   height: 100%;
   font-family: var(--primary-font);
 }
+
+.page {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
