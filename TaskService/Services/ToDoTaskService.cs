@@ -22,4 +22,12 @@ public class ToDoTaskService
     {
         return await _context.ToDoTasks.FindAsync(id);
     }
+
+    public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)
+    {
+        _context.ToDoTasks.Add(toDoTask);
+        await _context.SaveChangesAsync();
+
+        return toDoTask;
+    }
 }
