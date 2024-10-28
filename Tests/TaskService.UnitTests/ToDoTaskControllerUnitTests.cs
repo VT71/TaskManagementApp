@@ -8,6 +8,8 @@ using MockQueryable.Moq;
 using Moq.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using TaskService.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskService.UnitTests;
 
@@ -158,5 +160,22 @@ public class ToDoTaskControllerTests
         Assert.Equal(newToDoTask.Completed, createdToDoTask.Completed);
     }
 
-    
+    [Fact]
+    public async Task DueDatesInThePastNotValidated()
+    {
+        FutureDateAttribute futureDateAttribute = new FutureDateAttribute();
+
+        ToDoTask newToDoTask = new ToDoTask
+        {
+            Title = "A new task",
+            Description = "A new description",
+            DueDate = DateTime.Parse("2022-10-27T15:23:59.689Z"),
+            Completed = false
+        };
+
+        ValidationContext validationContext = new ValidationContext(newToDoTask.DueDate);
+        ValidationResult? validationResult = futureDateAttribute.GetValidationResult(newToDoTask.DueDate, validationContext);
+
+        Assert.Equal("Date must be in the future", validationResult?.ErrorMessage);
+    }
 }

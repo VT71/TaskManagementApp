@@ -41,6 +41,11 @@ namespace TaskService.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDoTask>> PostToDoTask(ToDoTask toDoTask)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             ToDoTask newToDoTask = await _service.CreateToDoTask(toDoTask);
 
             return CreatedAtAction(nameof(GetToDoTask), new { id = newToDoTask.Id }, newToDoTask);
