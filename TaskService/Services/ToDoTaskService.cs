@@ -30,4 +30,11 @@ public class ToDoTaskService
 
         return toDoTask;
     }
+
+    public async Task UpdateToDoTask(ToDoTask toDoTask)
+    {
+        _context.Entry(toDoTask).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync();
+    }
 }

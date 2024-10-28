@@ -161,7 +161,7 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
-    public async Task DueDatesInThePastNotValidated()
+    public void DueDatesInThePastNotValidated()
     {
         FutureDateAttribute futureDateAttribute = new FutureDateAttribute();
 

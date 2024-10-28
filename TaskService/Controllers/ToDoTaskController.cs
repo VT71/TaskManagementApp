@@ -53,35 +53,18 @@ namespace TaskService.Controllers
 
 
         // PUT: api/ToDoTask/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutToDoTask(long id, ToDoTask toDoTask)
-        // {
-        //     if (id != toDoTask.Id)
-        //     {
-        //         return BadRequest();
-        //     }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutToDoTask(long id, ToDoTask toDoTask)
+        {
+            if (id != toDoTask.Id)
+            {
+                return BadRequest();
+            }
 
-        //     _context.Entry(toDoTask).State = EntityState.Modified;
+            await _service.UpdateToDoTask(toDoTask);
 
-        //     try
-        //     {
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         if (!ToDoTaskExists(id))
-        //         {
-        //             return NotFound();
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
-
-        //     return NoContent();
-        // }
+            return NoContent();
+        }
 
         // DELETE: api/ToDoTask/5
         // [HttpDelete("{id}")]
