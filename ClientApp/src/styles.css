@@ -1,6 +1,10 @@
 :root {
   --primary-font: "Roboto", sans-serif;
   --main-background-color: white;
+  --not-completed-background-color: #ff00000f;
+  --not-completed-text-color: #e10000;
+  --completed-background-color: #0080000f;
+  --completed-text-color: green;
 }
 
 html,
@@ -36,8 +40,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-
 /* Material UI Overrides */
 .mat-elevation-z8 {
-    box-shadow: none;
+  box-shadow: none;
 }

@@ -4,6 +4,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
 import { Subscription } from 'rxjs';
@@ -11,7 +12,7 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-task-table',
     standalone: true,
-    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
+    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule],
     templateUrl: './task-table.component.html',
     styleUrl: './task-table.component.css'
 })

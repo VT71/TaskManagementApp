@@ -9,6 +9,25 @@
   box-shadow: 0px 0px 23px -14px rgba(0, 0, 0, 0.75);
 }
 
+.status-box {
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 8px;
+  text-align: center;
+  width: 120px;
+  padding: 0.5rem;
+}
+
+.completed {
+  background-color: var(--completed-background-color);
+  color: var(--completed-text-color);
+}
+
+.not-completed {
+  background-color: var(--not-completed-background-color);
+  color: var(--not-completed-text-color);
+}
+
 table {
   width: 100%;
 }
