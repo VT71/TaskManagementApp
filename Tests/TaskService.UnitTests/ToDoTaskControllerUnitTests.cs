@@ -131,4 +131,32 @@ public class ToDoTaskControllerTests
 
         Assert.IsType<NotFoundResult>(toDoTaskResult.Result);
     }
+
+    [Fact]
+    public async Task GetNewTaskWhenValidTaskCreated()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        ToDoTask newToDoTask = new ToDoTask
+        {
+            Title = "A new task",
+            Description = "A new description",
+            DueDate = DateTime.Parse("2025-10-27T15:23:59.689Z"),
+            Completed = false
+        };
+
+        var result = await toDoTaskController.PostToDoTask(newToDoTask);
+
+        var actionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
+        var createdToDoTask = Assert.IsType<ToDoTask>(actionResult.Value);
+        Assert.Equal(newToDoTask.Title, createdToDoTask.Title);
+        Assert.Equal(newToDoTask.Description, createdToDoTask.Description);
+        Assert.Equal(newToDoTask.DueDate, createdToDoTask.DueDate);
+        Assert.Equal(newToDoTask.Completed, createdToDoTask.Completed);
+    }
+
+    
 }
