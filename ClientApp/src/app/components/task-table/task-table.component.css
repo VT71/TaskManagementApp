@@ -42,6 +42,17 @@ th {
   width: 25%;
 }
 
+.top-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-container > button {
+    height: 56px !important;
+}
+
 .search-container {
   width: 30%;
 }
