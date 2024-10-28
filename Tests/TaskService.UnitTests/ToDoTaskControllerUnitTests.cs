@@ -178,4 +178,27 @@ public class ToDoTaskControllerTests
         Assert.False(dueDateInTheFuture);
     }
 
+    [Fact]
+    public async Task GetBadRequestWhenCreatingInvalidTask()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        ToDoTask newToDoTask = new ToDoTask
+        {
+            Title = "A new task",
+            Description = "A new description",
+            DueDate = DateTime.Parse("2020-10-27T15:23:59.689Z"),
+            Completed = false
+        };
+
+        toDoTaskController.ModelState.AddModelError("DueDate", "Date must be in the future");
+
+        var result = await toDoTaskController.PostToDoTask(newToDoTask);
+
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
+
 }
