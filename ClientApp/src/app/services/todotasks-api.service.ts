@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ToDoTask } from '../interfaces/to-do-task';
 import { environment } from '../../environments/environment';
 
@@ -11,6 +11,11 @@ export class TodotasksApiService {
     private http = inject(HttpClient);
 
     getAllTasks(): Observable<ToDoTask[]> {
-        return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask`)
+        return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask`).pipe(
+            map(tasks => tasks.map(task => ({
+                ...task,
+                dueDate: new Date(task.dueDate)
+            })))
+        );
     }
 }
