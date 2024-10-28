@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using TaskService.Attributes;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace TaskService.UnitTests;
 
@@ -273,6 +274,21 @@ public class ToDoTaskControllerTests
         var result = await toDoTaskController.PutToDoTask(1, oldTask);
 
         Assert.IsType<BadRequestResult>(result);
+    }
+
+    [Fact]
+    public async Task TaskDeletedWhenUsingValidId()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var deleteResult = await toDoTaskController.DeleteToDoTask(1);
+        var getResult = await toDoTaskController.GetToDoTask(1);
+
+        Assert.IsType<NoContentResult>(deleteResult);
+        Assert.IsType<NotFoundResult>(getResult.Result);
     }
 }
 
