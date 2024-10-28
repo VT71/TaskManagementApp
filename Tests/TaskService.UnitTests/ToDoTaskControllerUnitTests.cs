@@ -236,6 +236,21 @@ public class ToDoTaskControllerTests
         Assert.Equal(newTask.Completed, newCompletedStatus);
     }
 
-    
+    [Fact]
+    public async Task GetBadRequestWhenUpdatingAndIdInvalid()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var getResult = await toDoTaskController.GetToDoTask(1);
+
+        ToDoTask? existingTask = getResult.Value;
+
+        var result = await toDoTaskController.PutToDoTask(999, existingTask);
+
+        Assert.IsType<BadRequestResult>(result);
+    }
 }
 
