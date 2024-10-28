@@ -14,7 +14,7 @@ import { ToDoTask } from '../../interfaces/to-do-task';
     styleUrl: './task-table.component.css'
 })
 export class TaskTableComponent implements AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
+    displayedColumns: string[] = ['id', 'title', 'description', 'dueDate', 'completed'];
     dataSource: MatTableDataSource<ToDoTask>;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
