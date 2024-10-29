@@ -1,3 +1,4 @@
+@if (type !== 'edit' || (type === 'edit' && toDoTask)){
 <form [formGroup]="taskManageForm" (submit)="onSubmit()">
   <mat-form-field appearance="outline">
     <mat-error>Title required. Max 100 chars.</mat-error>
@@ -42,3 +43,4 @@
     <button class="main" mat-flat-button type="submit">Submit</button>
   </div>
 </form>
+}

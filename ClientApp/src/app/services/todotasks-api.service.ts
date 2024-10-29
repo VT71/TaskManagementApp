@@ -19,6 +19,14 @@ export class TodotasksApiService {
         );
     }
 
+    getToDoTask(id: number): Observable<ToDoTask> {
+        return this.http.get<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`).pipe(
+            map(task => ({
+                ...task,
+                dueDate: new Date(task.dueDate)
+            })))
+    }
+
     createToDoTask(toDoTask: ToDoTask) {
         return this.http.post<ToDoTask>(`${environment.api.serverUrl}/ToDoTask`, toDoTask);
     }
