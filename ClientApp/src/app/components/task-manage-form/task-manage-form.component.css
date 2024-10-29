@@ -7,3 +7,7 @@ form {
   max-width: 350px;
   margin-top: 3rem;
 }
+
+.date-field {
+    margin-bottom: 0.8rem;
+}

@@ -7,10 +7,10 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Description</mat-label>
-    <input matInput formControlName="description"/>
+    <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
+  <mat-form-field class="date-field" appearance="outline">
     <mat-error>Due Date required. Date must be in the future.</mat-error>
     <mat-label>Due Date</mat-label>
     <input matInput [matDatepicker]="pickupdatepicker" formControlName="dueDate" required />
