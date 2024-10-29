@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,6 +24,8 @@ import { RouterLink } from '@angular/router';
     styleUrl: './task-manage-form.component.css'
 })
 export class TaskManageFormComponent implements OnDestroy {
+    @Input() type!: string;
+
     private toDoTasksApiService = inject(TodotasksApiService)
     private formBuilder = inject(NonNullableFormBuilder);
     private subscriptions: Subscription[] = [];
