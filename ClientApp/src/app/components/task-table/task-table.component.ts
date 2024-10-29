@@ -14,7 +14,7 @@ import {
 } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-task-table',
@@ -30,6 +30,8 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
+
+    private router = inject(Router);
 
     private subscriptions: Subscription[] = [];
 
@@ -59,6 +61,12 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
     }
 
+    onEditClick(id: number) {
+        if (id) {
+            this.router.navigateByUrl(`tasks/edit-task/${id}`);
+        }
+    }
+
     openSnackBar(message: string) {
         let durationInSeconds = 5;
         this._snackBar.open(message, '', {
@@ -78,6 +86,6 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     convertDateToReadable(date: Date) {
-        return date.toLocaleDateString('en-GB') + ' ' + date.toLocaleTimeString('en-GB').substring(0, 5);
+        return date.toLocaleDateString('en-GB');
     }
 }
