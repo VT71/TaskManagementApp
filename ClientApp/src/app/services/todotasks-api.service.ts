@@ -18,4 +18,8 @@ export class TodotasksApiService {
             })))
         );
     }
+
+    createTask(toDoTask: ToDoTask) {
+        return this.http.post<ToDoTask>(`${environment.api.serverUrl}/ToDoTask`, toDoTask);
+    }
 }

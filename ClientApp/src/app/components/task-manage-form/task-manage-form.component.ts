@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class TaskManageFormComponent {
     private formBuilder = inject(FormBuilder);
 
-    public formGroup = this.formBuilder.group({
+    public taskManageForm = this.formBuilder.group({
         title: ['', [Validators.required, Validators.maxLength(100)]],
         description: [''],
         dueDate: [new Date(), [Validators.required]],
@@ -36,11 +36,6 @@ export class TaskManageFormComponent {
 
         const todayDateTime = new Date();
 
-        let errors = {
-            pickUpDateTime: { error: false },
-            dropOffDateTime: { error: false },
-        };
-
         if (dueDateTimeObject <= todayDateTime) {
             control.get('dueDate')?.setErrors({ invalidDate: true });
         }
@@ -48,5 +43,11 @@ export class TaskManageFormComponent {
         return dueDateTimeObject <= todayDateTime
             ? { invalidDueDate: { value: control.value } }
             : null;
+    }
+
+    onSubmit() {
+        if (this.taskManageForm.valid) {
+            console.log("Form data: " + JSON.stringify(this.taskManageForm.getRawValue()))
+        }
     }
 }

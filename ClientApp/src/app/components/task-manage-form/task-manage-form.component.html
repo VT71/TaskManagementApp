@@ -1,8 +1,8 @@
-<form [formGroup]="formGroup">
+<form [formGroup]="taskManageForm" (submit)="onSubmit()">
   <mat-form-field appearance="outline">
     <mat-error>Title required. Max 100 chars.</mat-error>
     <mat-label>Title</mat-label>
-    <input matInput required formControlName="title"/>
+    <input matInput required formControlName="title" />
   </mat-form-field>
 
   <mat-form-field appearance="outline">
@@ -13,7 +13,12 @@
   <mat-form-field class="date-field" appearance="outline">
     <mat-error>Due Date required. Date must be in the future.</mat-error>
     <mat-label>Due Date</mat-label>
-    <input matInput [matDatepicker]="pickupdatepicker" formControlName="dueDate" required />
+    <input
+      matInput
+      [matDatepicker]="pickupdatepicker"
+      formControlName="dueDate"
+      required
+    />
     <mat-hint>DD/MM/YYYY</mat-hint>
     <mat-datepicker-toggle
       matIconSuffix
