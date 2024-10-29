@@ -80,7 +80,7 @@
               <mat-icon>edit</mat-icon>
               <span>Edit</span>
             </button>
-            <button mat-menu-item [disabled]="row.completed">
+            <button mat-menu-item [disabled]="row.completed" (click)="onMarkAsComplete()">
               <mat-icon>check</mat-icon>
               <span>Mark as Completed</span>
             </button>

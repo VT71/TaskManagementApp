@@ -15,6 +15,8 @@ import {
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-task-table',
@@ -42,6 +44,8 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
 
+    readonly dialog = inject(MatDialog);
+
     ngOnInit(): void {
         this.subscriptions.push(
             this.toDoTasksApiService.getAllToDoTasks().subscribe(
@@ -59,6 +63,16 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
+    }
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: { type: 'mark-as-complete' },
+        });
+    }
+
+    onMarkAsComplete() {
+        this.openDialog()
     }
 
     onEditClick(id: number) {
