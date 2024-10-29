@@ -68,6 +68,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
 
     private populateForm(toDoTask: ToDoTask) {
         this.taskManageForm.markAsPristine()
+        this.taskManageForm.get("id")?.setValue(toDoTask.id);
         this.taskManageForm.get("title")?.setValue(toDoTask.title);
         this.taskManageForm.get("description")?.setValue(toDoTask.description ?? '');
         this.taskManageForm.get("dueDate")?.setValue(toDoTask.dueDate);
@@ -90,13 +91,24 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
     }
 
     onSubmit() {
-        if (this.taskManageForm.valid) {
-            this.subscriptions.push(
-                this.toDoTasksApiService.createToDoTask(this.taskManageForm.getRawValue()).subscribe({
-                    next: () => console.log("Success"),
-                    error: () => console.log("Error")
-                })
-            )
+        if (this.type === 'add') {
+            if (this.taskManageForm.valid) {
+                this.subscriptions.push(
+                    this.toDoTasksApiService.createToDoTask(this.taskManageForm.getRawValue()).subscribe({
+                        next: () => console.log("Success"),
+                        error: () => console.log("Error")
+                    })
+                )
+            }
+        } else if (this.type === 'edit') {
+            if (this.taskManageForm.valid) {
+                this.subscriptions.push(
+                    this.toDoTasksApiService.updateToDoTask(this.toDoTask.id, this.taskManageForm.getRawValue()).subscribe({
+                        next: () => console.log("Success"),
+                        error: () => console.log("Error")
+                    })
+                )
+            }
         }
     }
 
