@@ -14,11 +14,12 @@ import {
 } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-task-table',
     standalone: true,
-    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule],
+    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule, RouterLink],
     templateUrl: './task-table.component.html',
     styleUrl: './task-table.component.css'
 })
