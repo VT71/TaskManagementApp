@@ -9,4 +9,20 @@
     <mat-label>Description</mat-label>
     <input matInput />
   </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-error>Due Date must be in the future.</mat-error>
+    <mat-label>Due Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="pickupdatepicker"
+      required
+    />
+    <mat-hint>DD/MM/YYYY</mat-hint>
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="pickupdatepicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #pickupdatepicker> </mat-datepicker>
+  </mat-form-field>
 </form>

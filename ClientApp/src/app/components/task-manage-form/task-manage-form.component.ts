@@ -2,11 +2,18 @@ import { Component } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-task-manage-form',
     standalone: true,
-    imports: [MatFormFieldModule, MatInputModule],
+    providers: [
+        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+        provideNativeDateAdapter(),
+    ],
+    imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
     templateUrl: './task-manage-form.component.html',
     styleUrl: './task-manage-form.component.css'
 })
