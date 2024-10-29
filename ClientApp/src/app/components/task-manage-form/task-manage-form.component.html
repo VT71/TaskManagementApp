@@ -1,8 +1,8 @@
-<form>
+<form [formGroup]="formGroup">
   <mat-form-field appearance="outline">
     <mat-error>Title required. Max 100 chars.</mat-error>
     <mat-label>Title</mat-label>
-    <input matInput required />
+    <input matInput required formControlName="title"/>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
