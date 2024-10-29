@@ -30,4 +30,8 @@ export class TodotasksApiService {
     createToDoTask(toDoTask: ToDoTask) {
         return this.http.post<ToDoTask>(`${environment.api.serverUrl}/ToDoTask`, toDoTask);
     }
+
+    updateToDoTask(id: number, toDoTask: ToDoTask) {
+        return this.http.put<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`, toDoTask);
+    }
 }
