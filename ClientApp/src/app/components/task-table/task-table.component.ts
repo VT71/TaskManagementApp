@@ -42,7 +42,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscriptions.push(
-            this.toDoTasksApiService.getAllTasks().subscribe(
+            this.toDoTasksApiService.getAllToDoTasks().subscribe(
                 {
                     next: (toDoTasks) => this.dataSource = new MatTableDataSource(toDoTasks),
                     error: (e) => this.openSnackBar("Error occured when getting Tasks Data")

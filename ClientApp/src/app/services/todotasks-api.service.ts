@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class TodotasksApiService {
     private http = inject(HttpClient);
 
-    getAllTasks(): Observable<ToDoTask[]> {
+    getAllToDoTasks(): Observable<ToDoTask[]> {
         return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask`).pipe(
             map(tasks => tasks.map(task => ({
                 ...task,
