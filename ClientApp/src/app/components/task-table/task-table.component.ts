@@ -68,6 +68,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     openDialog(): void {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: { type: 'mark-as-complete' },
+            width: '300px'
         });
     }
 
