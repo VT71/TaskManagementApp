@@ -25,7 +25,8 @@ export class TaskManageFormComponent {
     public formGroup = this.formBuilder.group({
         title: ['', [Validators.required, Validators.maxLength(100)]],
         description: [''],
-        dueDate: [new Date(), [Validators.required]]
+        dueDate: [new Date(), [Validators.required]],
+        completed: [false, [Validators.required]]
     })
 
 }

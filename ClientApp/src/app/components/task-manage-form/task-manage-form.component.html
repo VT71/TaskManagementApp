@@ -24,7 +24,7 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
-    <mat-select [required]="true">
+    <mat-select [required]="true" formControlName="completed">
       <mat-option [value]="true">Completed</mat-option>
       <mat-option [value]="false">Not Completed</mat-option>
     </mat-select>
