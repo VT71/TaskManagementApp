@@ -6,6 +6,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-task-manage-form',
@@ -14,7 +15,7 @@ import {MatSelectModule} from '@angular/material/select';
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
         provideNativeDateAdapter(),
     ],
-    imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule],
+    imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, MatButtonModule],
     templateUrl: './task-manage-form.component.html',
     styleUrl: './task-manage-form.component.css'
 })
