@@ -36,7 +36,7 @@ export class ConfirmationDialogComponent implements OnInit {
         if (this.type() === 'mark-as-complete') {
             this.title = 'Mark this task as Complete ?';
         } else if (this.type() === 'delete') {
-            this.title = 'Mark this task as Complete ?'
+            this.title = 'Delete this task ?'
         }
     }
 
