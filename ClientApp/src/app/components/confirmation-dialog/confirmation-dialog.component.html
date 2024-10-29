@@ -1,1 +1,8 @@
-<p>confirmation-dialog works!</p>
+<h2 mat-dialog-title>Some title</h2>
+<mat-dialog-content>
+  <p>Some question?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="animal()" cdkFocusInitial>Yes</button>
+</mat-dialog-actions>
