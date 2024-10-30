@@ -27,6 +27,15 @@ export class TodotasksApiService {
             })))
     }
 
+    getFilteredToDoTasks(criteria: string): Observable<ToDoTask[]> {
+        return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask/filter?criteria=${criteria}`).pipe(
+            map(tasks => tasks.map(task => ({
+                ...task,
+                dueDate: new Date(task.dueDate)
+            })))
+        );
+    }
+
     createToDoTask(toDoTask: ToDoTask) {
         return this.http.post<ToDoTask>(`${environment.api.serverUrl}/ToDoTask`, toDoTask);
     }

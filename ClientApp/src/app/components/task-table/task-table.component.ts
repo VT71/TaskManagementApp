@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription, switchMap } from 'rxjs';
 import {
     MatSnackBar, MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
@@ -17,11 +17,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
     selector: 'app-task-table',
     standalone: true,
-    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule, RouterLink],
+    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule, RouterLink, SearchComponent],
     templateUrl: './task-table.component.html',
     styleUrl: './task-table.component.css'
 })
@@ -40,6 +41,8 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     private toDoTasksApiService = inject(TodotasksApiService);
     public toDoTasks: ToDoTask[] = [];
 
+    search$ = new Subject<string>(); // Emits search terms
+
     private _snackBar = inject(MatSnackBar);
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
@@ -48,6 +51,18 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getTasks();
+
+        this.subscriptions.push(this.search$
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged(),
+                switchMap(criteria => this.toDoTasksApiService.getFilteredToDoTasks(criteria))
+            )
+            .subscribe(filteredToDoTasks => {
+                if (this.dataSource) {
+                    this.dataSource.data = filteredToDoTasks;
+                }
+            }));
     }
 
     ngAfterViewInit() {
@@ -86,6 +101,13 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
             data: { type, toDoTask },
             width: '300px'
         });
+    }
+
+    handleSearch(event: Event) {
+        const filterCriteria = (event.target as HTMLInputElement).value;
+        if (filterCriteria) {
+            this.search$.next(filterCriteria);
+        }
     }
 
     onMarkAsComplete(toDoTask: ToDoTask) {

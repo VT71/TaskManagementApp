@@ -46,13 +46,9 @@ th {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: top;
 }
 
 .top-container > button {
     height: 56px !important;
-}
-
-.search-container {
-  width: 30%;
 }
