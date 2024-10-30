@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,8 +57,8 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        // this.dataSource.paginator = this.paginator;
+        // this.dataSource.sort = this.sort;
     }
 
     ngOnDestroy(): void {
@@ -73,7 +73,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
                     next: (filteredToDoTasks) => {
                         console.log("Success");
                         this.toDoTasks = filteredToDoTasks;
-                        this.updateTableSource(filteredToDoTasks);
+                        // this.updateTableSource(filteredToDoTasks);
                     },
                     error: () => console.log("Error")
                 })
@@ -84,7 +84,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
                     {
                         next: (toDoTasks) => {
                             this.toDoTasks = toDoTasks;
-                            this.updateTableSource(toDoTasks);
+                            // this.updateTableSource(toDoTasks);
                         },
                         error: (e) => this.openSnackBar("Error occurred when getting Tasks Data")
                     })
@@ -132,14 +132,32 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         });
     }
 
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
+    onSortChange(sort: Sort) {
+        if (sort.active && sort.direction) {
+            const queryParams = { ...this.route.snapshot.queryParams };
+            queryParams['sortBy'] = sort.active;
+            queryParams['sortDirection'] = sort.direction;
+            this.router.navigate([], { queryParams });
+        } else {
+            this.router.navigate([], {
+                queryParams: {
+                    'sortBy': null,
+                    'sortDirection': null
+                },
+                queryParamsHandling: 'merge'
+            })
         }
+        return;
     }
+
+    // applyFilter(event: Event) {
+    //     const filterValue = (event.target as HTMLInputElement).value;
+    //     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    //     if (this.dataSource.paginator) {
+    //         this.dataSource.paginator.firstPage();
+    //     }
+    // }
 
     convertDateToReadable(date: Date) {
         return date.toLocaleDateString('en-GB');
