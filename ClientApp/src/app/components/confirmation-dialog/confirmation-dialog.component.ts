@@ -13,6 +13,7 @@ import {
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { Subscription } from 'rxjs';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
+import { Router } from '@angular/router';
 
 export interface DialogData {
     type: string;
@@ -31,6 +32,7 @@ export interface DialogData {
 })
 export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = []
+
     private toDoTasksApiService = inject(TodotasksApiService);
 
     readonly dialogRef = inject(MatDialogRef<ConfirmationDialogComponent>);
@@ -67,6 +69,18 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
                 )
             )
         } else if (this.type === 'delete') {
+            this.subscriptions.push(
+                this.toDoTasksApiService.deleteToDoTask(this.toDoTask.id).subscribe(
+                    {
+                        next: () => {
+                            console.log("Success");
+                            this.dialogRef.close();
+                            window.location.reload();
+                        },
+                        error: () => console.log("Error")
+                    }
+                )
+            )
         }
     }
 

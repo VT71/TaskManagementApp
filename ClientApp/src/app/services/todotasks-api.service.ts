@@ -40,4 +40,8 @@ export class TodotasksApiService {
         toDoTaskToSend.completed = true;
         return this.http.put<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`, toDoTaskToSend);
     }
+
+    deleteToDoTask(id: number) {
+        return this.http.delete<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`);
+    }
 }
