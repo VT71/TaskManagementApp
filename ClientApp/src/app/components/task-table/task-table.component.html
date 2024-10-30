@@ -83,12 +83,12 @@
             <button
               mat-menu-item
               [disabled]="row.completed"
-              (click)="onMarkAsComplete()"
+              (click)="onMarkAsComplete(row)"
             >
               <mat-icon>check</mat-icon>
               <span>Mark as Completed</span>
             </button>
-            <button mat-menu-item (click)="onDeleteClick()">
+            <button mat-menu-item (click)="onDeleteClick(row)">
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>

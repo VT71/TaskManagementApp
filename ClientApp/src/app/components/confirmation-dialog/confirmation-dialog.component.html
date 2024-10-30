@@ -3,8 +3,8 @@
     <h2 mat-dialog-title>{{ title }}</h2>
     <mat-dialog-content> </mat-dialog-content>
     <mat-dialog-actions>
-      <button class="outlined" mat-stroked-button>Cancel</button>
-      <button class="main" mat-flat-button>Submit</button>
+      <button class="outlined" mat-stroked-butto>Cancel</button>
+      <button class="main" mat-flat-button (click)="onConfirm()">Submit</button>
     </mat-dialog-actions>
   </div>
 </div>

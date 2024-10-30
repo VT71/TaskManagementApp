@@ -65,19 +65,19 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
     }
 
-    openDialog(type: string): void {
+    openDialog(type: string, toDoTask: ToDoTask): void {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            data: { type },
+            data: { type, toDoTask },
             width: '300px'
         });
     }
 
-    onMarkAsComplete() {
-        this.openDialog('mark-as-complete')
+    onMarkAsComplete(toDoTask: ToDoTask) {
+        this.openDialog('mark-as-complete', toDoTask)
     }
 
-    onDeleteClick() {
-        this.openDialog('delete')
+    onDeleteClick(toDoTask: ToDoTask) {
+        this.openDialog('delete', toDoTask)
     }
 
     onEditClick(id: number) {
