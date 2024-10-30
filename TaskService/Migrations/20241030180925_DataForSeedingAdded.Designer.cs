@@ -11,7 +11,7 @@ using TaskService.Data;
 namespace TaskService.Migrations
 {
     [DbContext(typeof(ToDoTaskContext))]
-    [Migration("20241030162709_DataForSeedingAdded")]
+    [Migration("20241030180925_DataForSeedingAdded")]
     partial class DataForSeedingAdded
     {
         /// <inheritdoc />
