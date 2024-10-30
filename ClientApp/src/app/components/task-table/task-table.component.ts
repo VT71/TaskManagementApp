@@ -7,14 +7,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
-import { debounceTime, distinctUntilChanged, Subject, Subscription, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
     MatSnackBar, MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SearchComponent } from '../search/search.component';
@@ -35,13 +35,12 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild(MatSort) sort!: MatSort;
 
     private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
     private subscriptions: Subscription[] = [];
 
     private toDoTasksApiService = inject(TodotasksApiService);
     public toDoTasks: ToDoTask[] = [];
-
-    search$ = new Subject<string>(); // Emits search terms
 
     private _snackBar = inject(MatSnackBar);
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
@@ -50,19 +49,11 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     readonly dialog = inject(MatDialog);
 
     ngOnInit(): void {
-        this.getTasks();
-
-        this.subscriptions.push(this.search$
-            .pipe(
-                debounceTime(300),
-                distinctUntilChanged(),
-                switchMap(criteria => this.toDoTasksApiService.getFilteredToDoTasks(criteria))
-            )
-            .subscribe(filteredToDoTasks => {
-                if (this.dataSource) {
-                    this.dataSource.data = filteredToDoTasks;
-                }
-            }));
+        this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
+            const searchParam = params.get('search');
+            console.log("Search param: " + searchParam);
+            this.getTasks(searchParam)
+        }));
     }
 
     ngAfterViewInit() {
@@ -74,26 +65,41 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
     }
 
-    getTasks() {
+    getTasks(searchCriteria: string | null) {
         console.log("Getting tasks")
-        this.subscriptions.push(
-            this.toDoTasksApiService.getAllToDoTasks().subscribe(
-                {
-                    next: (toDoTasks) => {
-                        this.toDoTasks = toDoTasks;
-                        console.log(toDoTasks)
-                        // if (this.dataSource) {
-                        //     console.log("UPDATING DATA")
-                        //     this.dataSource.data = toDoTasks;
-                        // } else {
-                        //     this.dataSource = new MatTableDataSource();
-                        //     this.dataSource.data = toDoTasks;
-                        // }
-                        this.dataSource = new MatTableDataSource(toDoTasks);
+        if (searchCriteria) {
+            this.subscriptions.push(
+                this.toDoTasksApiService.getFilteredToDoTasks(searchCriteria).subscribe({
+                    next: (filteredToDoTasks) => {
+                        console.log("Success");
+                        this.toDoTasks = filteredToDoTasks;
+                        this.updateTableSource(filteredToDoTasks);
                     },
-                    error: (e) => this.openSnackBar("Error occurred when getting Tasks Data")
+                    error: () => console.log("Error")
                 })
-        )
+            )
+        } else {
+            this.subscriptions.push(
+                this.toDoTasksApiService.getAllToDoTasks().subscribe(
+                    {
+                        next: (toDoTasks) => {
+                            this.toDoTasks = toDoTasks;
+                            this.updateTableSource(toDoTasks);
+                        },
+                        error: (e) => this.openSnackBar("Error occurred when getting Tasks Data")
+                    })
+            )
+        }
+    }
+
+    updateTableSource(toDoTasks: ToDoTask[]) {
+        if (this.dataSource) {
+            console.log("UPDATING DATA")
+            this.dataSource.data = toDoTasks;
+        } else {
+            this.dataSource = new MatTableDataSource();
+            this.dataSource.data = toDoTasks;
+        }
     }
 
     openDialog(type: string, toDoTask: ToDoTask): void {
@@ -101,13 +107,6 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
             data: { type, toDoTask },
             width: '300px'
         });
-    }
-
-    handleSearch(event: Event) {
-        const filterCriteria = (event.target as HTMLInputElement).value;
-        if (filterCriteria) {
-            this.search$.next(filterCriteria);
-        }
     }
 
     onMarkAsComplete(toDoTask: ToDoTask) {
