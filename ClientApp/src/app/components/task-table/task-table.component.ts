@@ -47,13 +47,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     readonly dialog = inject(MatDialog);
 
     ngOnInit(): void {
-        this.subscriptions.push(
-            this.toDoTasksApiService.getAllToDoTasks().subscribe(
-                {
-                    next: (toDoTasks) => this.dataSource = new MatTableDataSource(toDoTasks),
-                    error: (e) => this.openSnackBar("Error occurred when getting Tasks Data")
-                })
-        )
+        this.getTasks();
     }
 
     ngAfterViewInit() {
@@ -63,6 +57,28 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
+    }
+
+    getTasks() {
+        console.log("Getting tasks")
+        this.subscriptions.push(
+            this.toDoTasksApiService.getAllToDoTasks().subscribe(
+                {
+                    next: (toDoTasks) => {
+                        this.toDoTasks = toDoTasks;
+                        console.log(toDoTasks)
+                        // if (this.dataSource) {
+                        //     console.log("UPDATING DATA")
+                        //     this.dataSource.data = toDoTasks;
+                        // } else {
+                        //     this.dataSource = new MatTableDataSource();
+                        //     this.dataSource.data = toDoTasks;
+                        // }
+                        this.dataSource = new MatTableDataSource(toDoTasks);
+                    },
+                    error: (e) => this.openSnackBar("Error occurred when getting Tasks Data")
+                })
+        )
     }
 
     openDialog(type: string, toDoTask: ToDoTask): void {

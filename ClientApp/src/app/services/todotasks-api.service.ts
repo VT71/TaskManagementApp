@@ -34,4 +34,10 @@ export class TodotasksApiService {
     updateToDoTask(id: number, toDoTask: ToDoTask) {
         return this.http.put<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`, toDoTask);
     }
+
+    markToDoTaskComplete(id: number, toDoTask: ToDoTask) {
+        let toDoTaskToSend: ToDoTask = { ...toDoTask };
+        toDoTaskToSend.completed = true;
+        return this.http.put<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`, toDoTaskToSend);
+    }
 }

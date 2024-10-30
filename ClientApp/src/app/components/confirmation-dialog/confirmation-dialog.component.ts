@@ -35,15 +35,15 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
 
     readonly dialogRef = inject(MatDialogRef<ConfirmationDialogComponent>);
     readonly data = inject<DialogData>(MAT_DIALOG_DATA);
-    readonly type = model(this.data.type);
-    readonly toDoTask = model(this.data.toDoTask);
+    readonly type = this.data.type;
+    readonly toDoTask = this.data.toDoTask;
 
     public title: string = '';
 
     ngOnInit(): void {
-        if (this.type() === 'mark-as-complete') {
+        if (this.type === 'mark-as-complete') {
             this.title = 'Mark this task as Complete ?';
-        } else if (this.type() === 'delete') {
+        } else if (this.type === 'delete') {
             this.title = 'Delete this task ?'
         }
     }
@@ -53,16 +53,20 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     }
 
     onConfirm() {
-        if (this.type() === 'mark-as-complete') {
+        if (this.type === 'mark-as-complete') {
             this.subscriptions.push(
-                this.toDoTasksApiService.updateToDoTask(this.toDoTask().id, this.toDoTask()).subscribe(
+                this.toDoTasksApiService.markToDoTaskComplete(this.toDoTask.id, this.toDoTask).subscribe(
                     {
-                        next: () => console.log("Success"),
+                        next: () => {
+                            console.log("Success");
+                            this.toDoTask.completed = true;
+                            this.dialogRef.close();
+                        },
                         error: () => console.log("Error")
                     }
                 )
             )
-        } else if (this.type() === 'delete') {
+        } else if (this.type === 'delete') {
         }
     }
 
