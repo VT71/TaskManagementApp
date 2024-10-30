@@ -3,7 +3,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { FormBuilder } from '@angular/forms';
+import { NonNullableFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
@@ -18,9 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
     styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnDestroy, OnInit {
-    private formBuilder = inject(FormBuilder);
+    private formBuilder = inject(NonNullableFormBuilder);
     private subscriptions: Subscription[] = [];
-    private toDoTasksApiService = inject(TodotasksApiService);
     private prevCriteria!: string;
     private router = inject(Router);
     private route = inject(ActivatedRoute);

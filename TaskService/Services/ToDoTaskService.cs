@@ -23,9 +23,40 @@ public class ToDoTaskService
         return await _context.ToDoTasks.FindAsync(id);
     }
 
-    public async Task<ICollection<ToDoTask>> GetFiltered(string criteria)
+    public async Task<ICollection<ToDoTask>> GetFiltered(string? titleSearch, string? sortBy, string? sortDirection)
     {
-        return await _context.ToDoTasks.Where(tak => tak.Title.ToLower().Contains(criteria.ToLower())).AsNoTracking().ToListAsync();
+        IQueryable<ToDoTask> query = _context.ToDoTasks;
+
+        if (!string.IsNullOrEmpty(titleSearch))
+        {
+            query = query.Where(task => task.Title.ToLower().Contains(titleSearch.ToLower()));
+        }
+
+        if (string.IsNullOrEmpty(sortDirection))
+        {
+            sortDirection = "asc";
+        }
+
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            switch (sortBy.ToLower())
+            {
+                case "title":
+                    query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.Title) : query.OrderBy(task => task.Title);
+                    break;
+                case "duedate":
+                    query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.DueDate) : query.OrderBy(task => task.DueDate);
+                    break;
+                case "completed":
+                    query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.Completed) : query.OrderBy(task => task.Completed);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        var toDoTasks = await query.ToListAsync();
+        return toDoTasks;
     }
 
     public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)
