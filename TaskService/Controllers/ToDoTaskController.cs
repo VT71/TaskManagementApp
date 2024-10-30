@@ -37,6 +37,12 @@ namespace TaskService.Controllers
             return toDoTask;
         }
 
+        [HttpGet("filter")]
+        public async Task<ActionResult<ICollection<ToDoTask>>> GetFilteredToDoTasks(string criteria)
+        {
+            return Ok(await _service.GetFiltered(criteria));
+        }
+
         // POST: api/ToDoTask
         [HttpPost]
         public async Task<ActionResult<ToDoTask>> PostToDoTask(ToDoTask toDoTask)

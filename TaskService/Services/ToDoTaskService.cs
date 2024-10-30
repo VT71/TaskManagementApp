@@ -23,6 +23,11 @@ public class ToDoTaskService
         return await _context.ToDoTasks.FindAsync(id);
     }
 
+    public async Task<ICollection<ToDoTask>> GetFiltered(string criteria)
+    {
+        return await _context.ToDoTasks.Where(tak => tak.Title.ToLower().Contains(criteria.ToLower())).AsNoTracking().ToListAsync();
+    }
+
     public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)
     {
         _context.ToDoTasks.Add(toDoTask);
