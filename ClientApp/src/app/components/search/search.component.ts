@@ -47,6 +47,7 @@ export class SearchComponent implements OnDestroy, OnInit {
                 this.prevCriteria = criteriaToSend;
                 const queryParams = { ...this.route.snapshot.queryParams };
                 queryParams['search'] = criteriaToSend;
+                queryParams['page'] = '1';
                 this.router.navigate([], { queryParams });
             }
         }
@@ -60,6 +61,7 @@ export class SearchComponent implements OnDestroy, OnInit {
             this.router.navigate([], {
                 queryParams: {
                     'search': null,
+                    'page': '1'
                 },
                 queryParamsHandling: 'merge'
             })
