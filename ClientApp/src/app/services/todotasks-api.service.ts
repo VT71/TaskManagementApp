@@ -27,29 +27,34 @@ export class TodotasksApiService {
             })))
     }
 
-    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null): Observable<ToDoTask[]> {
-        if (titleSearch || (sortBy && sortDirection)) {
-            let queryParams = [];
+    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<ToDoTask[]> {
+        let queryParams = [];
 
-            if (titleSearch) {
-                queryParams.push(`titleSearch=${titleSearch}`);
-            }
-
-            if (sortBy && sortDirection) {
-                queryParams.push(`sortBy=${sortBy}`, `sortDirection=${sortDirection}`);
-            }
-
-            const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
-
-            return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
-                map(tasks => tasks.map(task => ({
-                    ...task,
-                    dueDate: new Date(task.dueDate)
-                })))
-            );
-        } else {
-            return of([]);
+        if (titleSearch) {
+            queryParams.push(`titleSearch=${titleSearch}`);
         }
+
+        if (sortBy && sortDirection) {
+            queryParams.push(`sortBy=${sortBy}`, `sortDirection=${sortDirection}`);
+        }
+
+        if (page && pageSize) {
+            queryParams.push(`page=${page}`, `pageSize=${pageSize}`);
+        }
+
+        const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+
+        return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
+            map(tasks => tasks.map(task => ({
+                ...task,
+                dueDate: new Date(task.dueDate)
+            })))
+        );
+
+    }
+
+    getToDoTasksCount(): Observable<number> {
+        return this.http.get<number>(`${environment.api.serverUrl}/ToDoTask/count`);
     }
 
     createToDoTask(toDoTask: ToDoTask) {

@@ -2,6 +2,8 @@
 <mat-paginator
   #paginator
   (page)="handlePageEvent($event)"
+  [pageIndex]="page"
+  [pageSize]="pageSize"
   [length]="toDoTasksCount"
   [showFirstLastButtons]="true"
   [pageSizeOptions]="[10, 20, 30]"

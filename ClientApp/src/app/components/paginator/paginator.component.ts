@@ -1,7 +1,7 @@
-import { Component, inject, Injectable, Input } from '@angular/core';
+import { Component, inject, Injectable, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Injectable()
 export class MyCustomPaginatorIntl implements MatPaginatorIntl {
@@ -35,11 +35,16 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
     templateUrl: './paginator.component.html',
     styleUrl: './paginator.component.css'
 })
-export class PaginatorComponent {
+export class PaginatorComponent implements OnInit, OnDestroy {
     @Input() toDoTasksCount!: number;
+
+    private subscriptions: Subscription[] = []
 
     private router = inject(Router);
     private route = inject(ActivatedRoute)
+
+    public page: number = 0;
+    public pageSize: number = 10;
 
     handlePageEvent(e: PageEvent) {
         const queryParams = { ...this.route.snapshot.queryParams };
@@ -47,4 +52,20 @@ export class PaginatorComponent {
         queryParams['pageSize'] = e.pageSize;
         this.router.navigate([], { queryParams });
     }
+
+    ngOnInit(): void {
+        this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
+            const pageParam = params.get('page');
+            const pageSizeParam = params.get('pageSize');
+            if (Number(pageParam) && Number(pageSizeParam)) {
+                this.page = Number(pageParam) - 1
+                this.pageSize = Number(pageSizeParam)
+            }
+        }));
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe())
+    }
+
 }

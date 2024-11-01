@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import {
     MatSnackBar, MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
@@ -60,13 +60,15 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
             const titleSearchParam = params.get('search');
             const sortByParam = params.get('sortBy');
             const sortDirectionParam = params.get('sortDirection');
+            const pageParam = params.get('page');
+            const pageSizeParam = params.get('pageSize');
 
             if (sortDirectionParam && sortByParam) {
                 this.sortByParamValue = sortByParam;
                 this.sortDirectionParamValue = sortDirectionParam
             }
 
-            this.getTasks(titleSearchParam, sortByParam, sortDirectionParam)
+            this.getTasks(titleSearchParam, sortByParam, sortDirectionParam, pageParam, pageSizeParam)
         }));
     }
 
@@ -88,31 +90,21 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
     }
 
-    getTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null) {
-        if (titleSearch || (sortBy && sortDirection)) {
-            this.subscriptions.push(
-                this.toDoTasksApiService.getFilteredToDoTasks(titleSearch, sortBy, sortDirection).subscribe({
-                    next: (filteredToDoTasks) => {
-                        console.log("Success");
-                        this.toDoTasks = filteredToDoTasks;
-                        // this.updateTableSource(filteredToDoTasks);
-                    },
-                    error: () => console.log("Error")
-                })
-            )
-        } else {
-            this.subscriptions.push(
-                this.toDoTasksApiService.getAllToDoTasks().subscribe(
-                    {
-                        next: (toDoTasks) => {
-                            this.toDoTasks = toDoTasks;
-                            // this.updateTableSource(toDoTasks);
-                        },
-                        error: (e) => this.openSnackBar("Error occurred when getting Tasks Data")
-                    })
-            )
-        }
+    getTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, pageParam: string | null, pageSizeParam: string | null) {
+        let tasksDataObservable = forkJoin({ toDoTasks: this.toDoTasksApiService.getFilteredToDoTasks(titleSearch, sortBy, sortDirection, pageParam, pageSizeParam), toDoTasksCount: this.toDoTasksApiService.getToDoTasksCount() })
+        this.subscriptions.push(
+            tasksDataObservable.subscribe({
+                next: ({ toDoTasks, toDoTasksCount }) => {
+                    console.log("TO DO TASKS: " + toDoTasks)
+                    this.toDoTasks = toDoTasks;
+                    this.toDoTasksCount = toDoTasksCount;
+                    // this.updateTableSource(filteredToDoTasks);
+                },
+                error: () => console.log("Error")
+            })
+        );
     }
+
 
     handlePageEvent(e: PageEvent) {
         console.log("Page : " + e.pageIndex)
