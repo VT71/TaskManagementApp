@@ -10,7 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
 import { concatMap, map, Observable, of, Subscription } from 'rxjs';
 import { ToDoTask } from '../../interfaces/to-do-task';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import {
+    MatSnackBar, MatSnackBarHorizontalPosition,
+    MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+
 
 @Component({
     selector: 'app-task-manage-form',
@@ -28,8 +33,15 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
 
     private toDoTasksApiService = inject(TodotasksApiService)
     private formBuilder = inject(NonNullableFormBuilder);
+
     private subscriptions: Subscription[] = [];
+
+    private router = inject(Router);
     private route = inject(ActivatedRoute);
+
+    private _snackBar = inject(MatSnackBar);
+    horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+    verticalPosition: MatSnackBarVerticalPosition = 'top';
 
     public toDoTask!: ToDoTask;
 
@@ -95,7 +107,10 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
             if (this.taskManageForm.valid) {
                 this.subscriptions.push(
                     this.toDoTasksApiService.createToDoTask(this.taskManageForm.getRawValue()).subscribe({
-                        next: () => console.log("Success"),
+                        next: (newToDoTask) => {
+                            this.router.navigateByUrl(`tasks/edit-task/${newToDoTask.id}`);
+                            this.openSnackBar("Task created successfully")
+                        },
                         error: () => console.log("Error")
                     })
                 )
@@ -110,6 +125,15 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
                 )
             }
         }
+    }
+
+    openSnackBar(message: string) {
+        let durationInSeconds = 5;
+        this._snackBar.open(message, '', {
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+            duration: durationInSeconds * 1000
+        });
     }
 
     ngOnDestroy(): void {
