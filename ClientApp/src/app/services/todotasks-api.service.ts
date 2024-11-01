@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { ToDoTask } from '../interfaces/to-do-task';
 import { environment } from '../../environments/environment';
-import { PagedResult } from '../interfaces/paged-result';
+import { PagedUnit } from '../interfaces/paged-unit';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +28,7 @@ export class TodotasksApiService {
             })))
     }
 
-    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<PagedResult<ToDoTask>> {
+    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<PagedUnit<ToDoTask>> {
         let queryParams = [];
 
         if (titleSearch) {
@@ -45,7 +45,7 @@ export class TodotasksApiService {
 
         const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
 
-        return this.http.get<PagedResult<ToDoTask>>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
+        return this.http.get<PagedUnit<ToDoTask>>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
             map(result => {
                 return {
                     ...result, items: result.items.map(task => ({
