@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskService.Models;
@@ -15,9 +16,10 @@ namespace TaskService.Controllers
         {
             _service = service;
         }
-
+        
         // GET: api/ToDoTask
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<ICollection<ToDoTask>>> GetToDoTasks()
         {
             return Ok(await _service.GetAll());
