@@ -61,6 +61,11 @@ public class ToDoTaskService
         return toDoTasks;
     }
 
+    public async Task<int> GetCount()
+    {
+        return await _context.ToDoTasks.CountAsync();
+    }
+
     public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)
     {
         _context.ToDoTasks.Add(toDoTask);

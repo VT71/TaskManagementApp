@@ -43,6 +43,13 @@ namespace TaskService.Controllers
             return Ok(await _service.GetFiltered(titleSearch, sortBy, sortDirection, page, pageSize));
         }
 
+
+        [HttpGet("count")]
+        public async Task<ActionResult<ICollection<ToDoTask>>> GetToDoTasksCount()
+        {
+            return Ok(await _service.GetCount());
+        }
+
         // POST: api/ToDoTask
         [HttpPost]
         public async Task<ActionResult<ToDoTask>> PostToDoTask(ToDoTask toDoTask)
