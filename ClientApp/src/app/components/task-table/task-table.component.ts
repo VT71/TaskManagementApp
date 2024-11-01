@@ -91,13 +91,11 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     getTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, pageParam: string | null, pageSizeParam: string | null) {
-        let tasksDataObservable = forkJoin({ toDoTasks: this.toDoTasksApiService.getFilteredToDoTasks(titleSearch, sortBy, sortDirection, pageParam, pageSizeParam), toDoTasksCount: this.toDoTasksApiService.getToDoTasksCount() })
         this.subscriptions.push(
-            tasksDataObservable.subscribe({
-                next: ({ toDoTasks, toDoTasksCount }) => {
-                    console.log("TO DO TASKS: " + toDoTasks)
-                    this.toDoTasks = toDoTasks;
-                    this.toDoTasksCount = toDoTasksCount;
+            this.toDoTasksApiService.getFilteredToDoTasks(titleSearch, sortBy, sortDirection, pageParam, pageSizeParam).subscribe({
+                next: (pagedResult) => {
+                    this.toDoTasks = pagedResult.items;
+                    this.toDoTasksCount = pagedResult.totalCount;
                     // this.updateTableSource(filteredToDoTasks);
                 },
                 error: () => console.log("Error")

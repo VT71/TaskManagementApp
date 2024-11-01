@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { ToDoTask } from '../interfaces/to-do-task';
 import { environment } from '../../environments/environment';
+import { PagedResult } from '../interfaces/paged-result';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +28,7 @@ export class TodotasksApiService {
             })))
     }
 
-    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<ToDoTask[]> {
+    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<PagedResult<ToDoTask>> {
         let queryParams = [];
 
         if (titleSearch) {
@@ -44,11 +45,15 @@ export class TodotasksApiService {
 
         const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
 
-        return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
-            map(tasks => tasks.map(task => ({
-                ...task,
-                dueDate: new Date(task.dueDate)
-            })))
+        return this.http.get<PagedResult<ToDoTask>>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
+            map(result => {
+                return {
+                    ...result, items: result.items.map(task => ({
+                        ...task,
+                        dueDate: new Date(task.dueDate)
+                    }))
+                }
+            })
         );
 
     }
