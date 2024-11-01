@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatSort, MatSortable, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,7 +32,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     dataSource: MatTableDataSource<ToDoTask> = new MatTableDataSource();
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
+    @ViewChild(MatSort) matSort!: MatSort;
 
     private router = inject(Router);
     private route = inject(ActivatedRoute);
@@ -46,30 +46,50 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
 
+    public sortByParamValue = '';
+    public sortDirectionParamValue = '';
+
     readonly dialog = inject(MatDialog);
+
+    private cdref = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
         this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
-            const searchParam = params.get('search');
-            console.log("Search param: " + searchParam);
-            this.getTasks(searchParam)
+            const titleSearchParam = params.get('search');
+            const sortByParam = params.get('sortBy');
+            const sortDirectionParam = params.get('sortDirection');
+
+            if (sortDirectionParam && sortByParam) {
+                this.sortByParamValue = sortByParam;
+                this.sortDirectionParamValue = sortDirectionParam
+            }
+
+            this.getTasks(titleSearchParam, sortByParam, sortDirectionParam)
         }));
     }
 
     ngAfterViewInit() {
         // this.dataSource.paginator = this.paginator;
         // this.dataSource.sort = this.sort;
+        if (this.sortDirectionParamValue && this.sortByParamValue) {
+            this.matSort.active = this.sortByParamValue;
+            this.matSort.direction = this.sortDirectionParamValue === 'desc' ? this.sortDirectionParamValue as 'desc' : 'asc';
+            this.matSort.sortChange.emit({
+                active: this.matSort.active,
+                direction: this.matSort.direction,
+            });
+        }
+        this.cdref.detectChanges();
     }
 
     ngOnDestroy(): void {
         this.subscriptions.forEach((subcription) => subcription.unsubscribe);
     }
 
-    getTasks(searchCriteria: string | null) {
-        console.log("Getting tasks")
-        if (searchCriteria) {
+    getTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null) {
+        if (titleSearch || (sortBy && sortDirection)) {
             this.subscriptions.push(
-                this.toDoTasksApiService.getFilteredToDoTasks(searchCriteria).subscribe({
+                this.toDoTasksApiService.getFilteredToDoTasks(titleSearch, sortBy, sortDirection).subscribe({
                     next: (filteredToDoTasks) => {
                         console.log("Success");
                         this.toDoTasks = filteredToDoTasks;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { ToDoTask } from '../interfaces/to-do-task';
 import { environment } from '../../environments/environment';
 
@@ -27,13 +27,29 @@ export class TodotasksApiService {
             })))
     }
 
-    getFilteredToDoTasks(criteria: string): Observable<ToDoTask[]> {
-        return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask/filter?criteria=${criteria}`).pipe(
-            map(tasks => tasks.map(task => ({
-                ...task,
-                dueDate: new Date(task.dueDate)
-            })))
-        );
+    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null): Observable<ToDoTask[]> {
+        if (titleSearch || (sortBy && sortDirection)) {
+            let queryParams = [];
+
+            if (titleSearch) {
+                queryParams.push(`titleSearch=${titleSearch}`);
+            }
+
+            if (sortBy && sortDirection) {
+                queryParams.push(`sortBy=${sortBy}`, `sortDirection=${sortDirection}`);
+            }
+
+            const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+
+            return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
+                map(tasks => tasks.map(task => ({
+                    ...task,
+                    dueDate: new Date(task.dueDate)
+                })))
+            );
+        } else {
+            return of([]);
+        }
     }
 
     createToDoTask(toDoTask: ToDoTask) {
