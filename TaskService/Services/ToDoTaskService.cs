@@ -32,6 +32,8 @@ public class ToDoTaskService
             query = query.Where(task => task.Title.ToLower().Contains(titleSearch.ToLower()));
         }
 
+        int totalCount = await query.CountAsync();
+
         if (string.IsNullOrEmpty(sortDirection))
         {
             sortDirection = "asc";
@@ -59,7 +61,7 @@ public class ToDoTaskService
 
         var toDoTasks = await query.ToListAsync();
 
-        return new PagedUnit<ToDoTask> { TotalCount = toDoTasks.Count, Items = toDoTasks };
+        return new PagedUnit<ToDoTask> { TotalCount = totalCount, Items = toDoTasks };
     }
 
     public async Task<int> GetCount()
