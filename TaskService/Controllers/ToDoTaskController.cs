@@ -38,9 +38,9 @@ namespace TaskService.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<ActionResult<ICollection<ToDoTask>>> GetFilteredToDoTasks(string? titleSearch, string? sortBy, string? sortDirection)
+        public async Task<ActionResult<ICollection<ToDoTask>>> GetFilteredToDoTasks(string? titleSearch, string? sortBy, string? sortDirection, int page = 1, int pageSize = 10)
         {
-            return Ok(await _service.GetFiltered(titleSearch, sortBy, sortDirection));
+            return Ok(await _service.GetFiltered(titleSearch, sortBy, sortDirection, page, pageSize));
         }
 
         // POST: api/ToDoTask

@@ -23,7 +23,7 @@ public class ToDoTaskService
         return await _context.ToDoTasks.FindAsync(id);
     }
 
-    public async Task<ICollection<ToDoTask>> GetFiltered(string? titleSearch, string? sortBy, string? sortDirection)
+    public async Task<ICollection<ToDoTask>> GetFiltered(string? titleSearch, string? sortBy, string? sortDirection, int page, int pageSize)
     {
         IQueryable<ToDoTask> query = _context.ToDoTasks;
 
@@ -54,6 +54,8 @@ public class ToDoTaskService
                     break;
             }
         }
+
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);
 
         var toDoTasks = await query.ToListAsync();
         return toDoTasks;
