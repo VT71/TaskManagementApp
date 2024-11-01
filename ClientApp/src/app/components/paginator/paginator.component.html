@@ -1,0 +1,10 @@
+@if (toDoTasksCount && toDoTasksCount > 10) {
+<mat-paginator
+  #paginator
+  (page)="handlePageEvent($event)"
+  [length]="toDoTasksCount"
+  [showFirstLastButtons]="true"
+  [pageSizeOptions]="[10, 20, 30]"
+>
+</mat-paginator>
+}

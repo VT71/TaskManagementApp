@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortable, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -18,11 +18,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SearchComponent } from '../search/search.component';
+import { PaginatorComponent } from '../paginator/paginator.component';
 
 @Component({
     selector: 'app-task-table',
     standalone: true,
-    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule, RouterLink, SearchComponent],
+    imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatMenuModule, MatButtonModule, RouterLink, SearchComponent, PaginatorComponent],
     templateUrl: './task-table.component.html',
     styleUrl: './task-table.component.css'
 })
@@ -41,6 +42,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     private toDoTasksApiService = inject(TodotasksApiService);
     public toDoTasks: ToDoTask[] = [];
+    public toDoTasksCount = 0;
 
     private _snackBar = inject(MatSnackBar);
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
@@ -110,6 +112,17 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
                     })
             )
         }
+    }
+
+    handlePageEvent(e: PageEvent) {
+        console.log("Page : " + e.pageIndex)
+        // this.pageEvent = e;
+        // this.length = e.length;
+        // this.pageSize = e.pageSize;
+        // this.pageIndex = e.pageIndex;
+        // const queryParams = { ...this.route.snapshot.queryParams };
+        // queryParams['page'] = criteriaToSend;
+        // this.router.navigate([], { queryParams });
     }
 
     updateTableSource(toDoTasks: ToDoTask[]) {
