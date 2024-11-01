@@ -23,7 +23,7 @@ public class ToDoTaskService
         return await _context.ToDoTasks.FindAsync(id);
     }
 
-    public async Task<ICollection<ToDoTask>> GetFiltered(string? titleSearch, string? sortBy, string? sortDirection, int page, int pageSize)
+    public async Task<PagedUnit<ToDoTask>> GetFiltered(string? titleSearch, string? sortBy, string? sortDirection, int page, int pageSize)
     {
         IQueryable<ToDoTask> query = _context.ToDoTasks;
 
@@ -58,7 +58,8 @@ public class ToDoTaskService
         query = query.Skip((page - 1) * pageSize).Take(pageSize);
 
         var toDoTasks = await query.ToListAsync();
-        return toDoTasks;
+
+        return new PagedUnit<ToDoTask> { TotalCount = toDoTasks.Count, Items = toDoTasks };
     }
 
     public async Task<int> GetCount()
