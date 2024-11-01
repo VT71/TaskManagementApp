@@ -137,6 +137,6 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.forEach((subscription) => subscription.unsubscribe);
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 }

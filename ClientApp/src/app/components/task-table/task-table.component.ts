@@ -87,7 +87,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.forEach((subcription) => subcription.unsubscribe);
+        this.subscriptions.forEach((subcription) => subcription.unsubscribe());
     }
 
     getTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, pageParam: string | null, pageSizeParam: string | null) {
