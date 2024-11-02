@@ -65,7 +65,7 @@ public class ToDoTaskControllerTests
 
         var result = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
         var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(result.Value);
-        Assert.Equal(3, tasks.Count);
+        Assert.Equal(26, tasks.Count);
     }
 
     [Fact]
