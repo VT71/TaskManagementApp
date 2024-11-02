@@ -319,7 +319,7 @@ public class ToDoTaskControllerTests
 
         Assert.IsAssignableFrom<List<ToDoTask>>(paginationToDoTasks);
         Assert.Equal(paginationUnit.TotalCount, allToDoTasks.Count);
-        Assert.Equal(paginationToDoTasks, allToDoTasks.Take(pageSize).ToList());
+        Assert.True(paginationToDoTasks.SequenceEqual(allToDoTasks.Take(pageSize)));
     }
 
     [Fact]
