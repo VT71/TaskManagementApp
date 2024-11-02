@@ -14,10 +14,11 @@ export const appConfig: ApplicationConfig = {
         domain: 'dev-1ehyyzsy67kkgexr.us.auth0.com',
         clientId: 'uDhsXQorgbV3316nAnTgsq2ptkxpwNqh',
         authorizationParams: {
-            redirect_uri: window.location.origin
+            redirect_uri: window.location.origin,
+            audience: 'https://to-do-task-api.com'
         },
         httpInterceptor: {
-            allowedList: [`${environment.api.serverUrl}/ToDoTask`],
+            allowedList: [`${environment.api.serverUrl}/ToDoTask*`],
         },
     }),]
 };
