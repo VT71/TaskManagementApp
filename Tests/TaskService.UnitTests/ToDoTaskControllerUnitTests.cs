@@ -298,6 +298,8 @@ public class ToDoTaskControllerTests
     {
         var dbContext = DatabaseContext();
 
+        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.ToListAsync();
+
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
@@ -316,6 +318,7 @@ public class ToDoTaskControllerTests
         Assert.IsAssignableFrom<List<ToDoTask>>(defaultToDoTasks);
         Assert.IsAssignableFrom<List<ToDoTask>>(firstPageToDoTasks);
 
+        Assert.Equal(defaultPagedUnit.TotalCount, allToDoTasks.Count);
         Assert.Equal(defaultToDoTasks, firstPageToDoTasks);
     }
 
@@ -336,6 +339,7 @@ public class ToDoTaskControllerTests
         var paginationToDoTasks = paginationUnit.Items;
 
         Assert.IsAssignableFrom<List<ToDoTask>>(paginationToDoTasks);
+        Assert.Equal(paginationUnit.TotalCount, allToDoTasks.Count);
         Assert.Equal(paginationToDoTasks, allToDoTasks.Take(pageSize).ToList());
     }
 
@@ -343,6 +347,8 @@ public class ToDoTaskControllerTests
     public async Task GetEmptyListWhenALargePageNumberProvided()
     {
         var dbContext = DatabaseContext();
+
+        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.ToListAsync();
 
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
@@ -352,6 +358,7 @@ public class ToDoTaskControllerTests
         var result = Assert.IsType<OkObjectResult>(paginationToDoRasksResult.Result);
         var paginationUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         Assert.IsAssignableFrom<List<ToDoTask>>(paginationUnit.Items);
+        Assert.Equal(paginationUnit.TotalCount, allToDoTasks.Count);
         Assert.Empty(paginationUnit.Items);
     }
 
