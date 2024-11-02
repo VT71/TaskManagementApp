@@ -69,6 +69,13 @@ namespace TaskService.Controllers
                 return BadRequest();
             }
 
+            var searchedToDoTask = await _service.GetById(id);
+
+            if (searchedToDoTask == null)
+            {
+                return NotFound();
+            }
+
             await _service.UpdateToDoTask(toDoTask);
 
             return NoContent();
