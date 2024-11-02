@@ -78,7 +78,7 @@ public class ToDoTaskControllerTests
         var dbContext = DatabaseContext();
 
         long idToCheck = 1;
-        ToDoTask? taskFromDbSet =  await dbContext.ToDoTasks.FindAsync(idToCheck);
+        ToDoTask? taskFromDbSet = await dbContext.ToDoTasks.FindAsync(idToCheck);
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
@@ -127,15 +127,16 @@ public class ToDoTaskControllerTests
         var dbContext = DatabaseContext();
         var searchCriteria = "task a";
         List<ToDoTask> tasksFromDbSet = await dbContext.ToDoTasks.Where(t => t.Title.ToLower().Contains(searchCriteria)).ToListAsync();
+        pageSize = tasksFromDbSet.Count;
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: searchCriteria, sortBy: null, sortDirection: null);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: searchCriteria, sortBy: null, sortDirection: null, page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.True(filteredToDoTasks.SequenceEqual(tasksFromDbSet.Take(pageSize)));
+        Assert.True(filteredToDoTasks.SequenceEqual(tasksFromDbSet));
     }
 
     [Fact]
