@@ -160,15 +160,17 @@ public class ToDoTaskControllerTests
     {
         var dbContext = DatabaseContext();
 
+        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.ToListAsync();
+        pageSize = allToDoTasks.Count;
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null, page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
-        Assert.Equal(26, pagedUnit.TotalCount);
-        Assert.Equal(pageSize, pagedUnit.Items.Count);
+        Assert.Equal(allToDoTasks.Count, pagedUnit.TotalCount);
+        Assert.True(pagedUnit.Items.SequenceEqual(allToDoTasks));
     }
 
     [Fact]
