@@ -107,6 +107,8 @@ public class ToDoTaskControllerTests
     {
         var dbContext = DatabaseContext();
 
+        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.ToListAsync();
+
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
@@ -115,8 +117,9 @@ public class ToDoTaskControllerTests
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.Equal(26, pagedUnit.TotalCount);
-        Assert.Equal(pageSize, pagedUnit.Items.Count);
+        Assert.Equal(allToDoTasks.Count, pagedUnit.TotalCount);
+        Assert.True(pagedUnit.Items.SequenceEqual(allToDoTasks.Take(pageSize)));
+
     }
 
     [Fact]
