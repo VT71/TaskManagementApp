@@ -195,19 +195,18 @@ public class ToDoTaskControllerTests
     public async Task GetExpectedTasksWhenSortingByTitleDesc()
     {
         var dbContext = DatabaseContext();
-
+        List<ToDoTask> tasksFromDbSet = await dbContext.ToDoTasks.OrderByDescending(task => task.Title).ToListAsync();
+        pageSize = tasksFromDbSet.Count;
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "title", sortDirection: "desc");
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "title", sortDirection: "desc",  page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.Equal(26, pagedUnit.TotalCount);
-        Assert.Equal("Task Z", filteredToDoTasks[0].Title);
-        Assert.Equal("Task Y", filteredToDoTasks[1].Title);
-        Assert.Equal("Task X", filteredToDoTasks[2].Title);
+        Assert.Equal(tasksFromDbSet.Count, pagedUnit.TotalCount);
+        Assert.True(filteredToDoTasks.SequenceEqual(tasksFromDbSet));
     }
 
     [Fact]
