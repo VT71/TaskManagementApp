@@ -71,6 +71,7 @@ public class ToDoTaskService
 
     public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)
     {
+        toDoTask.Id = 0;
         _context.ToDoTasks.Add(toDoTask);
         await _context.SaveChangesAsync();
 
