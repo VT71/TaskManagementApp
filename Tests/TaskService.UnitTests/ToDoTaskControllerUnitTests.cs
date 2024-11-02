@@ -213,19 +213,18 @@ public class ToDoTaskControllerTests
     public async Task GetExpectedTasksWhenSortingByDueDateAsc()
     {
         var dbContext = DatabaseContext();
-
+        List<ToDoTask> tasksFromDbSet = await dbContext.ToDoTasks.OrderBy(task => task.DueDate).ToListAsync();
+        pageSize = tasksFromDbSet.Count;
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "asc");
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "asc",  page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.Equal(26, pagedUnit.TotalCount);
-        Assert.Equal(DateTime.Parse("2025-01-01T00:00:00.000Z"), filteredToDoTasks[0].DueDate);
-        Assert.Equal(DateTime.Parse("2025-01-02T00:00:00.000Z"), filteredToDoTasks[1].DueDate);
-        Assert.Equal(DateTime.Parse("2025-01-03T00:00:00.000Z"), filteredToDoTasks[2].DueDate);
+        Assert.Equal(tasksFromDbSet.Count, pagedUnit.TotalCount);
+        Assert.True(filteredToDoTasks.SequenceEqual(tasksFromDbSet));
     }
 
     [Fact]
