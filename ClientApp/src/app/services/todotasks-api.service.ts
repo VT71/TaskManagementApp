@@ -28,7 +28,7 @@ export class TodotasksApiService {
             })))
     }
 
-    getFilteredToDoTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<PagedUnit<ToDoTask>> {
+    getToDoTasksByCriteria(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<PagedUnit<ToDoTask>> {
         let queryParams = [];
 
         if (titleSearch) {
@@ -45,7 +45,7 @@ export class TodotasksApiService {
 
         const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
 
-        return this.http.get<PagedUnit<ToDoTask>>(`${environment.api.serverUrl}/ToDoTask/filter${queryString}`).pipe(
+        return this.http.get<PagedUnit<ToDoTask>>(`${environment.api.serverUrl}/ToDoTask/criteria${queryString}`).pipe(
             map(result => {
                 return {
                     ...result, items: result.items.map(task => ({

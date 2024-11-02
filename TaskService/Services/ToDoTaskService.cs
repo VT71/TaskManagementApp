@@ -23,13 +23,13 @@ public class ToDoTaskService
         return await _context.ToDoTasks.FindAsync(id);
     }
 
-    public async Task<PagedUnit<ToDoTask>> GetFiltered(string? titleSearch, string? sortBy, string? sortDirection, int page, int pageSize)
+    public async Task<PagedUnit<ToDoTask>> GetByCriteria(string? titleSearch, string? sortBy, string? sortDirection, int page, int pageSize)
     {
         IQueryable<ToDoTask> query = _context.ToDoTasks;
 
         if (!string.IsNullOrEmpty(titleSearch))
         {
-            query = query.Where(task => task.Title.ToLower().Contains(titleSearch.ToLower()));
+            query = GetFiltered(titleSearch, query);
         }
 
         int totalCount = await query.CountAsync();
@@ -41,27 +41,43 @@ public class ToDoTaskService
 
         if (!string.IsNullOrEmpty(sortBy))
         {
-            switch (sortBy.ToLower())
-            {
-                case "title":
-                    query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.Title) : query.OrderBy(task => task.Title);
-                    break;
-                case "duedate":
-                    query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.DueDate) : query.OrderBy(task => task.DueDate);
-                    break;
-                case "completed":
-                    query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.Completed) : query.OrderBy(task => task.Completed);
-                    break;
-                default:
-                    break;
-            }
+            query = GetSorted(sortBy, sortDirection, query);
         }
 
-        query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        query = GetPagedUnit(page, pageSize, query);
 
         var toDoTasks = await query.ToListAsync();
 
         return new PagedUnit<ToDoTask> { TotalCount = totalCount, Items = toDoTasks };
+    }
+
+    public IQueryable<ToDoTask> GetFiltered(string titleSearch, IQueryable<ToDoTask> query)
+    {
+        return query.Where(task => task.Title.ToLower().Contains(titleSearch.ToLower()));
+    }
+
+    public IQueryable<ToDoTask> GetSorted(string sortBy, string sortDirection, IQueryable<ToDoTask> query)
+    {
+        switch (sortBy.ToLower())
+        {
+            case "title":
+                query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.Title) : query.OrderBy(task => task.Title);
+                break;
+            case "duedate":
+                query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.DueDate) : query.OrderBy(task => task.DueDate);
+                break;
+            case "completed":
+                query = sortDirection.ToLower() == "desc" ? query.OrderByDescending(task => task.Completed) : query.OrderBy(task => task.Completed);
+                break;
+            default:
+                break;
+        }
+        return query;
+    }
+
+    public IQueryable<ToDoTask> GetPagedUnit(int page, int pageSize, IQueryable<ToDoTask> query)
+    {
+        return query.Skip((page - 1) * pageSize).Take(pageSize);
     }
 
     public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)

@@ -92,7 +92,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     getTasks(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, pageParam: string | null, pageSizeParam: string | null) {
         this.subscriptions.push(
-            this.toDoTasksApiService.getFilteredToDoTasks(titleSearch, sortBy, sortDirection, pageParam, pageSizeParam).subscribe({
+            this.toDoTasksApiService.getToDoTasksByCriteria(titleSearch, sortBy, sortDirection, pageParam, pageSizeParam).subscribe({
                 next: (pagedResult) => {
                     this.toDoTasks = pagedResult.items;
                     this.toDoTasksCount = pagedResult.totalCount;
