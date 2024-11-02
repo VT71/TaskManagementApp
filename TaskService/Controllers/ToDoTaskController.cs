@@ -8,6 +8,7 @@ namespace TaskService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ToDoTaskController : ControllerBase
     {
         ToDoTaskService _service;
@@ -16,10 +17,9 @@ namespace TaskService.Controllers
         {
             _service = service;
         }
-        
+
         // GET: api/ToDoTask
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<ICollection<ToDoTask>>> GetToDoTasks()
         {
             return Ok(await _service.GetAll());
