@@ -11,6 +11,7 @@ namespace TaskService.UnitTests;
 
 public class ToDoTaskControllerTests
 {
+    private int pageSize = 10;
     private ToDoTaskContext DatabaseContext()
     {
         var options = new DbContextOptionsBuilder<ToDoTaskContext>()
@@ -159,6 +160,22 @@ public class ToDoTaskControllerTests
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
         Assert.Equal(26, pagedUnit.TotalCount);
+    }
+
+    [Fact]
+    public async Task GetAllTasksWhenSortingByNull()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null);
+
+        var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
+        var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
+        Assert.Equal(26, pagedUnit.TotalCount);
+        Assert.Equal(pageSize, pagedUnit.Items.Count);
     }
 
     [Fact]
