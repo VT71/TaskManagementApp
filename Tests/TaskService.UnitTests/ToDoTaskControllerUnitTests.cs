@@ -182,7 +182,7 @@ public class ToDoTaskControllerTests
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "title", sortDirection: "asc",  page: 1, pageSize);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "title", sortDirection: "asc", page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
@@ -200,7 +200,7 @@ public class ToDoTaskControllerTests
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "title", sortDirection: "desc",  page: 1, pageSize);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "title", sortDirection: "desc", page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
@@ -218,7 +218,7 @@ public class ToDoTaskControllerTests
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "asc",  page: 1, pageSize);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "asc", page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
@@ -236,7 +236,7 @@ public class ToDoTaskControllerTests
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "desc",  page: 1, pageSize);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "desc", page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
@@ -254,7 +254,7 @@ public class ToDoTaskControllerTests
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "completed", sortDirection: "asc",  page: 1, pageSize);
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "completed", sortDirection: "asc", page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
@@ -267,19 +267,18 @@ public class ToDoTaskControllerTests
     public async Task GetExpectedTasksWhenSortingByCompletionStatusDesc()
     {
         var dbContext = DatabaseContext();
-
+        List<ToDoTask> tasksFromDbSet = await dbContext.ToDoTasks.OrderByDescending(task => task.Completed).ToListAsync();
+        pageSize = tasksFromDbSet.Count;
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "completed", sortDirection: "desc");
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "completed", sortDirection: "desc", page: 1, pageSize);
 
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.Equal(26, pagedUnit.TotalCount);
-        Assert.True(filteredToDoTasks[0].Completed);
-        Assert.True(filteredToDoTasks[1].Completed);
-        Assert.True(filteredToDoTasks[2].Completed);
+        Assert.Equal(tasksFromDbSet.Count, pagedUnit.TotalCount);
+        Assert.True(filteredToDoTasks.SequenceEqual(tasksFromDbSet));
     }
 
     [Fact]
