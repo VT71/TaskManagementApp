@@ -6,6 +6,7 @@ using TaskService.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using TaskService.Attributes;
+using NuGet.ContentModel;
 
 namespace TaskService.UnitTests;
 
@@ -76,13 +77,16 @@ public class ToDoTaskControllerTests
     {
         var dbContext = DatabaseContext();
 
+        long idToCheck = 1;
+        ToDoTask? taskFromDbSet =  await dbContext.ToDoTasks.FindAsync(idToCheck);
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var toDoTaskResult = await toDoTaskController.GetToDoTask(1);
+        var toDoTaskResult = await toDoTaskController.GetToDoTask(idToCheck);
 
+        Assert.IsType<ToDoTask>(taskFromDbSet);
         Assert.IsType<ToDoTask>(toDoTaskResult.Value);
-        Assert.Equal(1, toDoTaskResult.Value.Id);
+        Assert.Equal(taskFromDbSet.Id, toDoTaskResult.Value.Id);
     }
 
     [Fact]
