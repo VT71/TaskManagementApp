@@ -200,6 +200,25 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetExpectedTasksWhenSortingByDueDateAsc()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "duedate", sortDirection: "asc");
+
+        var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
+        var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
+        var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
+        Assert.Equal(26, pagedUnit.TotalCount);
+        Assert.Equal(DateTime.Parse("2025-01-01T00:00:00.000Z"), filteredToDoTasks[0].DueDate);
+        Assert.Equal(DateTime.Parse("2025-01-02T00:00:00.000Z"), filteredToDoTasks[1].DueDate);
+        Assert.Equal(DateTime.Parse("2025-01-03T00:00:00.000Z"), filteredToDoTasks[2].DueDate);
+    }
+
+    [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
         var dbContext = DatabaseContext();
