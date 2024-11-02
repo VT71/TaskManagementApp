@@ -496,11 +496,18 @@ public class ToDoTaskControllerTests
 
         ToDoTask? oldTask = getResult.Value;
 
-        oldTask.DueDate = newDueDate;
+        if (oldTask != null)
+        {
+            oldTask.DueDate = newDueDate;
 
-        var result = await toDoTaskController.PutToDoTask(1, oldTask);
+            var result = await toDoTaskController.PutToDoTask(1, oldTask);
 
-        Assert.IsType<BadRequestResult>(result);
+            Assert.IsType<BadRequestResult>(result);
+        }
+        else
+        {
+            Assert.Fail();
+        }
     }
 
     [Fact]
