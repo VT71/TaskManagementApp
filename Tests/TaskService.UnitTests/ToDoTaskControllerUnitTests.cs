@@ -96,6 +96,24 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetExpectedTaskWhenFilteringByTitle()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: "task a", sortBy: null, sortDirection: null);
+
+        var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
+        var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
+        var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
+        Assert.Single(filteredToDoTasks);
+        Assert.IsType<ToDoTask>(filteredToDoTasks[0]);
+        Assert.Equal("Task A", filteredToDoTasks[0].Title);
+    }
+
+    [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
         var dbContext = DatabaseContext();
