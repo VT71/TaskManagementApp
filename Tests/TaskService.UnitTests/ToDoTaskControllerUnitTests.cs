@@ -257,6 +257,25 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetExpectedTasksWhenSortingByCompletionStatusDesc()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var filteredToDoTasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: "completed", sortDirection: "desc");
+
+        var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
+        var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
+        var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
+        Assert.Equal(26, pagedUnit.TotalCount);
+        Assert.True(filteredToDoTasks[0].Completed);
+        Assert.True(filteredToDoTasks[1].Completed);
+        Assert.True(filteredToDoTasks[2].Completed);
+    }
+
+    [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
         var dbContext = DatabaseContext();
