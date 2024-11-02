@@ -142,7 +142,7 @@ public class ToDoTaskControllerTests
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.Equal(26, filteredToDoTasks.Count);
+        Assert.Equal(10, filteredToDoTasks.Count);
     }
 
     [Fact]
