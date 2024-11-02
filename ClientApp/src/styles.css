@@ -25,6 +25,10 @@ html {
   font-family: var(--primary-font);
 }
 
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 .page {
   width: 100%;
   max-width: 900px;
@@ -33,15 +37,7 @@ html {
 
 h1 {
   text-align: center;
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 /* Material Angular Overrides */
@@ -61,4 +57,11 @@ button.main.error {
 
 button.outlined {
   color: var(--primary-color) !important;
+}
+
+.mat-mdc-fab:not(.mdc-fab--extended) {
+    border-radius: 16px !important;
+    background-color: var(--main-background-color) !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
 }

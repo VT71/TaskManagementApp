@@ -56,20 +56,20 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     private cdref = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
-        this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
-            const titleSearchParam = params.get('search');
-            const sortByParam = params.get('sortBy');
-            const sortDirectionParam = params.get('sortDirection');
-            const pageParam = params.get('page');
-            const pageSizeParam = params.get('pageSize');
+        // this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
+        //     const titleSearchParam = params.get('search');
+        //     const sortByParam = params.get('sortBy');
+        //     const sortDirectionParam = params.get('sortDirection');
+        //     const pageParam = params.get('page');
+        //     const pageSizeParam = params.get('pageSize');
 
-            if (sortDirectionParam && sortByParam) {
-                this.sortByParamValue = sortByParam;
-                this.sortDirectionParamValue = sortDirectionParam
-            }
+        //     if (sortDirectionParam && sortByParam) {
+        //         this.sortByParamValue = sortByParam;
+        //         this.sortDirectionParamValue = sortDirectionParam
+        //     }
 
-            this.getTasks(titleSearchParam, sortByParam, sortDirectionParam, pageParam, pageSizeParam)
-        }));
+        //     this.getTasks(titleSearchParam, sortByParam, sortDirectionParam, pageParam, pageSizeParam)
+        // }));
     }
 
     ngAfterViewInit() {

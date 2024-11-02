@@ -1,0 +1,15 @@
+@if(auth.isAuthenticated$ | async;){
+<button
+  mat-fab
+  aria-label="Log Out Button"
+  (click)="
+    auth.logout({ logoutParams: { returnTo: document.location.origin } })
+  "
+>
+  <mat-icon>logout</mat-icon>
+</button>
+} @else {
+<button mat-fab aria-label="Log In Button" (click)="auth.loginWithRedirect()">
+  <mat-icon>login</mat-icon>
+</button>
+}
