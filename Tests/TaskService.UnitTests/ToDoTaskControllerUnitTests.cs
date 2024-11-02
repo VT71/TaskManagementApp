@@ -177,8 +177,8 @@ public class ToDoTaskControllerTests
     public async Task GetExpectedTasksWhenSortingByTitleAsc()
     {
         var dbContext = DatabaseContext();
-        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.OrderBy(task => task.Title).ToListAsync();
-        pageSize = allToDoTasks.Count;
+        List<ToDoTask> tasksFromDbSet = await dbContext.ToDoTasks.OrderBy(task => task.Title).ToListAsync();
+        pageSize = tasksFromDbSet.Count;
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
@@ -187,8 +187,8 @@ public class ToDoTaskControllerTests
         var result = Assert.IsType<OkObjectResult>(filteredToDoTasksResult.Result);
         var pagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
-        Assert.Equal(allToDoTasks.Count, pagedUnit.TotalCount);
-        Assert.True(filteredToDoTasks.SequenceEqual(allToDoTasks));
+        Assert.Equal(tasksFromDbSet.Count, pagedUnit.TotalCount);
+        Assert.True(filteredToDoTasks.SequenceEqual(tasksFromDbSet));
     }
 
     [Fact]
