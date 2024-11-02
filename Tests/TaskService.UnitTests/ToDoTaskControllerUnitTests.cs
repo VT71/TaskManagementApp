@@ -512,6 +512,27 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetNotFoundWhenUpdatingNonExistentTask()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        ToDoTask nonExistentTask = new ToDoTask
+        {
+            Id = 999,
+            Title = "Task",
+            Description = "A new description",
+            DueDate = DateTime.Parse("2025-10-27T15:23:59.689Z"),
+            Completed = false
+        };
+
+        var result = await toDoTaskController.PutToDoTask(999, nonExistentTask);
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
     public async Task GetNoContentWhenDeletingTaskWithValidId()
     {
         var dbContext = DatabaseContext();
