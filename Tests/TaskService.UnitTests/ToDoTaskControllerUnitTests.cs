@@ -320,6 +320,26 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetExpectedTasksWhenValidPageAndPageSizeProvided()
+    {
+        var dbContext = DatabaseContext();
+
+        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.ToListAsync();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var paginationToDoRasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null, page: 1, pageSize);
+
+        var result = Assert.IsType<OkObjectResult>(paginationToDoRasksResult.Result);
+        var paginationUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
+        var paginationToDoTasks = paginationUnit.Items;
+
+        Assert.IsAssignableFrom<List<ToDoTask>>(paginationToDoTasks);
+        Assert.Equal(paginationToDoTasks, allToDoTasks.Take(pageSize).ToList());
+    }
+
+    [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
         var dbContext = DatabaseContext();
