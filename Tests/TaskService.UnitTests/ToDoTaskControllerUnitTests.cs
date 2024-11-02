@@ -425,22 +425,37 @@ public class ToDoTaskControllerTests
 
         ToDoTask? oldTask = getResult.Value;
 
-        oldTask.Title = newTitle;
-        oldTask.Description = newDescription;
-        oldTask.DueDate = newDueDate;
-        oldTask.Completed = newCompletedStatus;
+        if (oldTask != null)
+        {
+
+            oldTask.Title = newTitle;
+            oldTask.Description = newDescription;
+            oldTask.DueDate = newDueDate;
+            oldTask.Completed = newCompletedStatus;
 
 
-        var result = await toDoTaskController.PutToDoTask(1, oldTask);
+            var result = await toDoTaskController.PutToDoTask(1, oldTask);
 
-        var newGetResult = await toDoTaskController.GetToDoTask(1);
-        ToDoTask? newTask = newGetResult.Value;
+            var newGetResult = await toDoTaskController.GetToDoTask(1);
+            ToDoTask? newTask = newGetResult.Value;
 
-        Assert.IsType<NoContentResult>(result);
-        Assert.Equal(newTask.Title, newTitle);
-        Assert.Equal(newTask.Description, newDescription);
-        Assert.Equal(newTask.DueDate, newDueDate);
-        Assert.Equal(newTask.Completed, newCompletedStatus);
+            if (newTask != null)
+            {
+                Assert.IsType<NoContentResult>(result);
+                Assert.Equal(newTask.Title, newTitle);
+                Assert.Equal(newTask.Description, newDescription);
+                Assert.Equal(newTask.DueDate, newDueDate);
+                Assert.Equal(newTask.Completed, newCompletedStatus);
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+        else
+        {
+            Assert.Fail();
+        }
     }
 
     [Fact]
