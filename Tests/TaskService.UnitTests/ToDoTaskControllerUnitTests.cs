@@ -470,9 +470,15 @@ public class ToDoTaskControllerTests
 
         ToDoTask? existingTask = getResult.Value;
 
-        var result = await toDoTaskController.PutToDoTask(999, existingTask);
-
-        Assert.IsType<BadRequestResult>(result);
+        if (existingTask != null)
+        {
+            var result = await toDoTaskController.PutToDoTask(999, existingTask);
+            Assert.IsType<BadRequestResult>(result);
+        }
+        else
+        {
+            Assert.Fail();
+        }
     }
 
     [Fact]
