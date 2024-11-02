@@ -294,6 +294,32 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetTasksFromFirstPageWithDefaultPageSizeWhenNoneProvided()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var toDoTasksDefaultResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null);
+        var toDoTasksFirstPageResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null, page: 1, pageSize);
+
+        var defaultResult = Assert.IsType<OkObjectResult>(toDoTasksDefaultResult.Result);
+        var firstPageResult = Assert.IsType<OkObjectResult>(toDoTasksFirstPageResult.Result);
+
+        var defaultPagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(defaultResult.Value);
+        var firstPagedUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(firstPageResult.Value);
+
+        var defaultToDoTasks = defaultPagedUnit.Items;
+        var firstPageToDoTasks = firstPagedUnit.Items;
+
+        Assert.IsAssignableFrom<List<ToDoTask>>(defaultToDoTasks);
+        Assert.IsAssignableFrom<List<ToDoTask>>(firstPageToDoTasks);
+
+        Assert.Equal(defaultToDoTasks, firstPageToDoTasks);
+    }
+
+    [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
         var dbContext = DatabaseContext();
