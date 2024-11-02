@@ -64,11 +64,6 @@ public class ToDoTaskService
         return new PagedUnit<ToDoTask> { TotalCount = totalCount, Items = toDoTasks };
     }
 
-    public async Task<int> GetCount()
-    {
-        return await _context.ToDoTasks.CountAsync();
-    }
-
     public async Task<ToDoTask> CreateToDoTask(ToDoTask toDoTask)
     {
         toDoTask.Id = 0;
