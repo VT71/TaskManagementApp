@@ -55,18 +55,20 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
-    public async Task GetAllTasksReturnsCorrectAmount()
+    public async Task GetAllTasksReturnsAll()
     {
         var dbContext = DatabaseContext();
+
+        List<ToDoTask> allToDoTasks = await dbContext.ToDoTasks.ToListAsync();
 
         ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
         ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
 
-        var allToDoTasks = await toDoTaskController.GetToDoTasks();
+        var allToDoTasksResult = await toDoTaskController.GetToDoTasks();
 
-        var result = Assert.IsType<OkObjectResult>(allToDoTasks.Result);
+        var result = Assert.IsType<OkObjectResult>(allToDoTasksResult.Result);
         var tasks = Assert.IsAssignableFrom<List<ToDoTask>>(result.Value);
-        Assert.Equal(26, tasks.Count);
+        Assert.True(allToDoTasks.SequenceEqual(tasks));
     }
 
     [Fact]
