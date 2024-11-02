@@ -340,6 +340,22 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
+    public async Task GetEmptyListWhenALargePageNumberProvided()
+    {
+        var dbContext = DatabaseContext();
+
+        ToDoTaskService toDoTaskService = new ToDoTaskService(dbContext);
+        ToDoTaskController toDoTaskController = new ToDoTaskController(toDoTaskService);
+
+        var paginationToDoRasksResult = await toDoTaskController.GetFilteredToDoTasks(titleSearch: null, sortBy: null, sortDirection: null, page: 999, pageSize);
+
+        var result = Assert.IsType<OkObjectResult>(paginationToDoRasksResult.Result);
+        var paginationUnit = Assert.IsAssignableFrom<PagedUnit<ToDoTask>>(result.Value);
+        Assert.IsAssignableFrom<List<ToDoTask>>(paginationUnit.Items);
+        Assert.Empty(paginationUnit.Items);
+    }
+
+    [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
         var dbContext = DatabaseContext();
