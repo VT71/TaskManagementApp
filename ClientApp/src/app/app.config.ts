@@ -7,9 +7,14 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from '../environments/environment';
 
+// Application configuration
 export const appConfig: ApplicationConfig = {
     providers: [provideRouter(routes), provideAnimationsAsync(), provideHttpClient(),
+
+    // Provide Auth0 HTTP interceptor
     provideHttpClient(withInterceptors([authHttpInterceptorFn])),
+
+    // Configure Auth0 authentication
     provideAuth0({
         domain: 'dev-1ehyyzsy67kkgexr.us.auth0.com',
         clientId: 'uDhsXQorgbV3316nAnTgsq2ptkxpwNqh',
