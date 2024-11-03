@@ -11,6 +11,7 @@ namespace TaskService.Controllers
     [Authorize]
     public class ToDoTaskController : ControllerBase
     {
+        // Service for handling ToDoTask operations
         ToDoTaskService _service;
 
         public ToDoTaskController(ToDoTaskService service)
@@ -31,6 +32,7 @@ namespace TaskService.Controllers
         {
             var toDoTask = await _service.GetById(id);
 
+            // Returns 404 if the task is not found
             if (toDoTask == null)
             {
                 return NotFound();
@@ -39,6 +41,7 @@ namespace TaskService.Controllers
             return toDoTask;
         }
 
+        // GET: api/ToDoTask/criteria
         [HttpGet("criteria")]
         public async Task<ActionResult<PagedUnit<ToDoTask>>> GetToDoTasksByCriteria(string? titleSearch, string? sortBy, string? sortDirection, int page = 1, int pageSize = 10)
         {
@@ -49,6 +52,7 @@ namespace TaskService.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDoTask>> PostToDoTask(ToDoTask toDoTask)
         {
+            // Returns 400 if the model state is invalid
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -64,6 +68,7 @@ namespace TaskService.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutToDoTask(long id, ToDoTask toDoTask)
         {
+            // Returns 400 if the ID does not match or the model state is invalid
             if ((id != toDoTask.Id) || !ModelState.IsValid)
             {
                 return BadRequest();
@@ -71,6 +76,7 @@ namespace TaskService.Controllers
 
             var searchedToDoTask = await _service.GetById(id);
 
+            // Returns 404 if the task to update is not found
             if (searchedToDoTask == null)
             {
                 return NotFound();
@@ -86,6 +92,8 @@ namespace TaskService.Controllers
         public async Task<IActionResult> DeleteToDoTask(long id)
         {
             var toDoTask = await _service.GetById(id);
+
+            // Returns 404 if the task to delete is not found
             if (toDoTask == null)
             {
                 return NotFound();
