@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var DevelopmentCorsPolicy = "DevelopmentCorsPolicy";
 
+// Configuring CORS (Cross-Origin Resource Sharing) policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: DevelopmentCorsPolicy,
@@ -19,7 +20,7 @@ builder.Services.AddCors(options =>
                       });
 });
 
-
+// Configuring JWT Bearer Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -35,6 +36,7 @@ builder.Services.AddScoped<ToDoTaskService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// Swagger set up to support token authorization
 builder.Services.AddSwaggerGen(c =>
       {
           c.SwaggerDoc("v1", new OpenApiInfo { Title = "TaskService", Version = "v1.0.0" });
