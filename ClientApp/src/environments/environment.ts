@@ -1,3 +1,4 @@
+// Environment configuration for development mode
 export const environment = {
     production: false,
     api: {
