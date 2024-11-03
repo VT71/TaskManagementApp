@@ -3,12 +3,15 @@ using TaskService.Models;
 
 namespace TaskService.Data;
 
+// Database context.
 public class ToDoTaskContext : DbContext
 {
     public ToDoTaskContext(DbContextOptions<ToDoTaskContext> options)
         : base(options)
     {
     }
+
+    // Configures the model and seeds initial data for the ToDoTasks.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ToDoTask>().HasData(
