@@ -10,5 +10,5 @@ import { AuthButtonComponent } from './components/auth-button/auth-button.compon
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'ClientApp';
+  title = 'ToDoTask App';
 }
