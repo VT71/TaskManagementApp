@@ -1,3 +1,4 @@
+/* Styling variables */
 :root {
   --primary-color: #1077ff;
   --on-primary-color: white;
@@ -11,6 +12,7 @@
   --primary-font: "Roboto", sans-serif;
 }
 
+/* Global Styling */
 html,
 body,
 * {
@@ -40,7 +42,7 @@ h1 {
   margin: 0;
 }
 
-/* Material Angular Overrides */
+/* Material Angular Styling Overrides */
 .mat-elevation-z8 {
   box-shadow: none;
 }
