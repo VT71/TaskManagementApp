@@ -1,13 +1,16 @@
+/* Test styling */
 h2,
 p {
   text-align: center;
 }
 
+/* Dialog buttons container styling */
 mat-dialog-actions {
   display: flex;
   justify-content: space-between;
 }
 
+/* Main content wrapper styling */
 .content-wrapper {
     padding: 1rem;
 }
