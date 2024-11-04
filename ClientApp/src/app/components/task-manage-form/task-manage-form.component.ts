@@ -31,20 +31,23 @@ import {
 export class TaskManageFormComponent implements OnDestroy, OnInit {
     @Input() type!: string;
 
+    // Inject necessary services
     private toDoTasksApiService = inject(TodotasksApiService)
     private formBuilder = inject(NonNullableFormBuilder);
-
-    private subscriptions: Subscription[] = [];
-
     private router = inject(Router);
     private route = inject(ActivatedRoute);
 
+    private subscriptions: Subscription[] = [];
+
+    // Snackbar instance and configuration
+    // for displaying messages
     private _snackBar = inject(MatSnackBar);
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
 
     public toDoTask!: ToDoTask;
 
+    // Form setup with validation
     public taskManageForm = this.formBuilder.group({
         id: [0],
         title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -55,6 +58,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
         { validators: this.futureDateValidator, })
 
     ngOnInit(): void {
+        // Fetch task details if editing an existing task
         if (this.type === 'edit') {
             this.subscriptions.push(
                 this.route.paramMap.pipe(
@@ -69,7 +73,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
                 ).subscribe(
                     {
                         next: (toDoTask) => {
-                            this.populateForm(toDoTask)
+                            this.populateForm(toDoTask); // Populate the form with task data
                             this.toDoTask = toDoTask;
                         },
                         error: (e) => console.log("Error occurred when getting task data.")
@@ -78,6 +82,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
         }
     }
 
+    // Populate the form fields with data
     private populateForm(toDoTask: ToDoTask) {
         this.taskManageForm.markAsPristine()
         this.taskManageForm.get("id")?.setValue(toDoTask.id);
@@ -87,6 +92,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
         this.taskManageForm.get("completed")?.setValue(toDoTask.completed);
     }
 
+    // Custom validator to check if due date is in the future
     private futureDateValidator(control: AbstractControl): ValidationErrors | null {
         const dueDateInput = control.get('dueDate');
         const dueDateTimeObject = new Date(dueDateInput?.value);
@@ -98,10 +104,11 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
         }
 
         return dueDateTimeObject <= todayDateTime
-            ? { invalidDueDate: { value: control.value } }
+            ? { invalidDueDate: { value: control.value } } // Return error if due date is today or in the past
             : null;
     }
 
+    // Handle form submission for adding or editing a task
     onSubmit() {
         if (this.type === 'add') {
             if (this.taskManageForm.valid) {
@@ -127,6 +134,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
         }
     }
 
+    // Open a snackbar with the given message for a set duration.
     openSnackBar(message: string) {
         let durationInSeconds = 5;
         this._snackBar.open(message, '', {
@@ -137,6 +145,7 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
     }
 
     ngOnDestroy(): void {
+        // Unsubscribe from all active subscriptions
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 }
