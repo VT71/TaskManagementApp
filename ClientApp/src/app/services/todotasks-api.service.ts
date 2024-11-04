@@ -71,13 +71,6 @@ export class TodotasksApiService {
     }
 
     /**
-     * Retrieves the total count of ToDoTasks.
-     */
-    getToDoTasksCount(): Observable<number> {
-        return this.http.get<number>(`${environment.api.serverUrl}/ToDoTask/count`);
-    }
-
-    /**
      * Creates a new ToDoTask on the server.
      */
     createToDoTask(toDoTask: ToDoTask) {
