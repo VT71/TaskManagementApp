@@ -90,11 +90,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
                 this.toDoTasksApiService.deleteToDoTask(this.toDoTask.id).subscribe(
                     {
                         next: () => {
-                            console.log("Success");
                             this.dialogRef.close(); // Close the dialog
                             window.location.reload(); // Reload the page to reflect changes
                         },
-                        error: () => console.log("Error")
+                        error: () => {
+                            this.openSnackBar("An error occurred while deleting the task.")
+                        }
                     }
                 )
             )
