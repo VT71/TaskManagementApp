@@ -76,7 +76,10 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
                             this.populateForm(toDoTask); // Populate the form with task data
                             this.toDoTask = toDoTask;
                         },
-                        error: (e) => console.log("Error occurred when getting task data.")
+                        error: (e) => {
+                            this.router.navigateByUrl(`/tasks`);
+                            this.openSnackBar("An error occurred while retrieving task data.")
+                        }
                     })
             )
         }
