@@ -8,7 +8,7 @@
 
   <div class="mat-elevation-z8">
     <table matSort (matSortChange)="onSortChange($event)">
-      <!-- ID Column -->
+      <!-- ID Column (sorting disabled) -->
       <ng-container matColumnDef="id">
         <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="true">
           ID
@@ -17,14 +17,14 @@
         <!-- <td mat-cell *matCellDef="let row">{{ row.id }}</td> -->
       </ng-container>
 
-      <!-- Title Column -->
+      <!-- Title Column (sorting enabled) -->
       <ng-container matColumnDef="title">
         <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th> -->
         <th mat-sort-header>Title</th>
         <!-- <td mat-cell *matCellDef="let row">{{ row.title }}</td> -->
       </ng-container>
 
-      <!-- Description Column -->
+      <!-- Description Column (sorting disabled) -->
       <ng-container matColumnDef="description">
         <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="true">
           Description
@@ -41,7 +41,7 @@
         </td> -->
       </ng-container>
 
-      <!-- Due Date Column -->
+      <!-- Due Date Column (sorting enabled) -->
       <ng-container matColumnDef="dueDate">
         <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header>Due Date</th> -->
         <th mat-sort-header>Due Date</th>
@@ -50,7 +50,7 @@
         </td> -->
       </ng-container>
 
-      <!-- Status Column -->
+      <!-- Status Column (sorting enabled) -->
       <ng-container matColumnDef="completed">
         <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th> -->
         <th mat-sort-header>Status</th>
@@ -63,7 +63,7 @@
         </td> -->
       </ng-container>
 
-      <!-- Menu Column -->
+      <!-- Menu Column (sorting disabled) -->
       <ng-container matColumnDef="options-menu">
         <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header></th> -->
         <th mat-sort-header [disabled]="true"></th>
@@ -99,11 +99,13 @@
       <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr> -->
 
+      <!-- Loop through each task to display in rows -->
       @for (toDoTask of toDoTasks; track toDoTask) {
       <tr>
         <td>{{ toDoTask.id }}</td>
         <td>{{ toDoTask.title }}</td>
         <td>
+          <!-- If no description, display none, or up to 100 chars -->
           {{
             toDoTask.description
               ? toDoTask.description.length > 100
