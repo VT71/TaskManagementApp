@@ -1,5 +1,7 @@
 <div class="root-container">
+  <!-- Form for searching tasks -->
   <form [formGroup]="searchForm" (submit)="onSubmit()">
+    <!-- Search input field -->
     <mat-form-field appearance="outline">
       <mat-label>Filter</mat-label>
       <input
@@ -9,6 +11,8 @@
         (keyup)="onClear($event)"
         #input
       />
+
+      <!-- Button to submit the search, with a search icon -->
       <button class="main search" matSuffix mat-flat-button type="submit">
         <mat-icon>search</mat-icon>
       </button>
