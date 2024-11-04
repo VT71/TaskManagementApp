@@ -9,6 +9,17 @@
   box-shadow: 0px 0px 23px -14px rgba(0, 0, 0, 0.75);
 }
 
+/* Task Table styling */
+table {
+  width: 100%;
+}
+
+td,
+th {
+  width: 25%;
+}
+
+/* Styling for task completion status box */
 .status-box {
   font-size: 0.8rem;
   font-weight: bold;
@@ -28,20 +39,7 @@
   color: var(--not-completed-text-color);
 }
 
-table {
-  width: 100%;
-}
-
-.mat-mdc-form-field {
-  font-size: 14px;
-  width: 100%;
-}
-
-td,
-th {
-  width: 25%;
-}
-
+/* Search & Add Task Container Styling */
 .top-container {
   width: 100%;
   display: flex;
@@ -50,5 +48,11 @@ th {
 }
 
 .top-container > button {
-    height: 56px !important;
+  height: 56px !important;
+}
+
+/* Search field styling */
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
 }
