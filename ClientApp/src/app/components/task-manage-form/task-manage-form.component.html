@@ -1,16 +1,19 @@
 @if (type !== 'edit' || (type === 'edit' && toDoTask)){
 <form [formGroup]="taskManageForm" (submit)="onSubmit()">
+  <!-- Title input field with validation error message -->
   <mat-form-field appearance="outline">
     <mat-error>Title required. Max 100 chars.</mat-error>
     <mat-label>Title</mat-label>
     <input matInput required formControlName="title" />
   </mat-form-field>
 
+  <!-- Description input field -->
   <mat-form-field appearance="outline">
     <mat-label>Description</mat-label>
     <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
 
+  <!-- Due Date input field with validation -->
   <mat-form-field class="date-field" appearance="outline">
     <mat-error>Due Date required. Date must be in the future.</mat-error>
     <mat-label>Due Date</mat-label>
@@ -28,6 +31,7 @@
     <mat-datepicker #pickupdatepicker> </mat-datepicker>
   </mat-form-field>
 
+  <!-- Status selection dropdown -->
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
     <mat-select [required]="true" formControlName="completed">
@@ -36,6 +40,7 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Buttons for cancelling or submitting the form -->
   <div class="buttons-container">
     <button class="outlined" mat-stroked-button routerLink="/tasks">
       Cancel
