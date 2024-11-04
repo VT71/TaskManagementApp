@@ -57,3 +57,11 @@ th {
   font-size: 14px;
   width: 100%;
 }
+
+/* Responsiveness Styling */
+@media only screen and (max-width: 500px) {
+  .top-container {
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+}
