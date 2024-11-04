@@ -119,9 +119,11 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
                     this.toDoTasksApiService.createToDoTask(this.taskManageForm.getRawValue()).subscribe({
                         next: (newToDoTask) => {
                             this.router.navigateByUrl(`tasks/edit-task/${newToDoTask.id}`);
-                            this.openSnackBar("Task created successfully")
+                            this.openSnackBar("Task created successfully.")
                         },
-                        error: () => console.log("Error")
+                        error: () => {
+                            this.openSnackBar("An error occurred while creating the task.")
+                        }
                     })
                 )
             }
