@@ -29,10 +29,10 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 })
 
 export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'title', 'description', 'dueDate', 'completed', 'options-menu'];
-    dataSource: MatTableDataSource<ToDoTask> = new MatTableDataSource();
+    // displayedColumns: string[] = ['id', 'title', 'description', 'dueDate', 'completed', 'options-menu'];
+    // dataSource: MatTableDataSource<ToDoTask> = new MatTableDataSource();
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    // @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) matSort!: MatSort;
 
     private router = inject(Router);
@@ -104,26 +104,26 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
 
-    handlePageEvent(e: PageEvent) {
-        console.log("Page : " + e.pageIndex)
-        // this.pageEvent = e;
-        // this.length = e.length;
-        // this.pageSize = e.pageSize;
-        // this.pageIndex = e.pageIndex;
-        // const queryParams = { ...this.route.snapshot.queryParams };
-        // queryParams['page'] = criteriaToSend;
-        // this.router.navigate([], { queryParams });
-    }
+    // handlePageEvent(e: PageEvent) {
+    //     console.log("Page : " + e.pageIndex)
+    //     this.pageEvent = e;
+    //     this.length = e.length;
+    //     this.pageSize = e.pageSize;
+    //     this.pageIndex = e.pageIndex;
+    //     const queryParams = { ...this.route.snapshot.queryParams };
+    //     queryParams['page'] = criteriaToSend;
+    //     this.router.navigate([], { queryParams });
+    // }
 
-    updateTableSource(toDoTasks: ToDoTask[]) {
-        if (this.dataSource) {
-            console.log("UPDATING DATA")
-            this.dataSource.data = toDoTasks;
-        } else {
-            this.dataSource = new MatTableDataSource();
-            this.dataSource.data = toDoTasks;
-        }
-    }
+    // updateTableSource(toDoTasks: ToDoTask[]) {
+    //     if (this.dataSource) {
+    //         console.log("UPDATING DATA")
+    //         this.dataSource.data = toDoTasks;
+    //     } else {
+    //         this.dataSource = new MatTableDataSource();
+    //         this.dataSource.data = toDoTasks;
+    //     }
+    // }
 
     openDialog(type: string, toDoTask: ToDoTask): void {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
