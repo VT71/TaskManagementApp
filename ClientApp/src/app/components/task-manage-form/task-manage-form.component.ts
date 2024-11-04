@@ -131,8 +131,12 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
             if (this.taskManageForm.valid) {
                 this.subscriptions.push(
                     this.toDoTasksApiService.updateToDoTask(this.toDoTask.id, this.taskManageForm.getRawValue()).subscribe({
-                        next: () => console.log("Success"),
-                        error: () => console.log("Error")
+                        next: () => {
+                            this.openSnackBar("Task updated successfully.")
+                        },
+                        error: () => {
+                            this.openSnackBar("An error occurred while updating the task.")
+                        }
                     })
                 )
             }
