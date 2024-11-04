@@ -11,6 +11,10 @@ import { PagedUnit } from '../interfaces/paged-unit';
 export class TodotasksApiService {
     private http = inject(HttpClient);
 
+    /**
+     * Fetches all ToDoTasks from the server.
+     * Converts each task's dueDate property from a string to a Date object.
+     */
     getAllToDoTasks(): Observable<ToDoTask[]> {
         return this.http.get<ToDoTask[]>(`${environment.api.serverUrl}/ToDoTask`).pipe(
             map(tasks => tasks.map(task => ({
@@ -20,6 +24,10 @@ export class TodotasksApiService {
         );
     }
 
+    /**
+    * Fetches a single ToDoTask by ID.
+    * Converts the task's dueDate property from a string to a Date object.
+    */
     getToDoTask(id: number): Observable<ToDoTask> {
         return this.http.get<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`).pipe(
             map(task => ({
@@ -28,6 +36,10 @@ export class TodotasksApiService {
             })))
     }
 
+    /**
+     * Retrieves ToDoTasks based on various filtering, sorting, and pagination criteria.
+     * Converts each task's dueDate from a string to a Date object.
+     */
     getToDoTasksByCriteria(titleSearch: string | null, sortBy: string | null, sortDirection: string | null, page: string | null, pageSize: string | null): Observable<PagedUnit<ToDoTask>> {
         let queryParams = [];
 
@@ -58,24 +70,39 @@ export class TodotasksApiService {
 
     }
 
+    /**
+     * Retrieves the total count of ToDoTasks.
+     */
     getToDoTasksCount(): Observable<number> {
         return this.http.get<number>(`${environment.api.serverUrl}/ToDoTask/count`);
     }
 
+    /**
+     * Creates a new ToDoTask on the server.
+     */
     createToDoTask(toDoTask: ToDoTask) {
         return this.http.post<ToDoTask>(`${environment.api.serverUrl}/ToDoTask`, toDoTask);
     }
 
+    /**
+     * Updates an existing ToDoTask by ID.
+     */
     updateToDoTask(id: number, toDoTask: ToDoTask) {
         return this.http.put<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`, toDoTask);
     }
 
+    /**
+     * Marks a specific ToDoTask as completed by updating its completed property to true.
+     */
     markToDoTaskComplete(id: number, toDoTask: ToDoTask) {
         let toDoTaskToSend: ToDoTask = { ...toDoTask };
         toDoTaskToSend.completed = true;
         return this.http.put<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`, toDoTaskToSend);
     }
 
+    /**
+     * Deletes a ToDoTask by ID.
+     */
     deleteToDoTask(id: number) {
         return this.http.delete<ToDoTask>(`${environment.api.serverUrl}/ToDoTask/${id}`);
     }
