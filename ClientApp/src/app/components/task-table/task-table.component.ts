@@ -44,6 +44,8 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     public toDoTasks: ToDoTask[] = [];
     public toDoTasksCount = 0;
 
+    // Snackbar instance and configuration
+    // for displaying messages
     private _snackBar = inject(MatSnackBar);
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
@@ -53,9 +55,12 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     readonly dialog = inject(MatDialog);
 
+    // ChangeDetectorRef instance for manually triggering change detection.
     private cdref = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
+        // Subscribe to query parameters to retrieve search, sorting,
+        // and pagination options, and retrieve tasks based on these.
         this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
             const titleSearchParam = params.get('search');
             const sortByParam = params.get('sortBy');
@@ -75,6 +80,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     ngAfterViewInit() {
         // this.dataSource.paginator = this.paginator;
         // this.dataSource.sort = this.sort;
+        // Set initial sort state if provided by query parameters.
         if (this.sortDirectionParamValue && this.sortByParamValue) {
             this.matSort.active = this.sortByParamValue;
             this.matSort.direction = this.sortDirectionParamValue === 'desc' ? this.sortDirectionParamValue as 'desc' : 'asc';
@@ -87,6 +93,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        // Unsubscribe from all active subscriptions
         this.subscriptions.forEach((subcription) => subcription.unsubscribe());
     }
 
@@ -125,6 +132,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     //     }
     // }
 
+    // Open a confirmation dialog for the specified action type and task.
     openDialog(type: string, toDoTask: ToDoTask): void {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: { type, toDoTask },
@@ -146,6 +154,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
+    // Open a snackbar with the given message for a set duration.
     openSnackBar(message: string) {
         let durationInSeconds = 5;
         this._snackBar.open(message, '', {
@@ -155,6 +164,7 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         });
     }
 
+    // Update query parameters based on the sort change and navigate.
     onSortChange(sort: Sort) {
         if (sort.active && sort.direction) {
             const queryParams = { ...this.route.snapshot.queryParams };
