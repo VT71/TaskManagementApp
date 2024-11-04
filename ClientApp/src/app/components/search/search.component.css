@@ -2,10 +2,12 @@
   width: 30%;
 }
 
+/* Search icon styling */
 mat-icon {
   margin: 0 !important;
 }
 
+/* Search button styling */
 button.main.search {
   height: 56px !important;
   padding: 1rem !important;
