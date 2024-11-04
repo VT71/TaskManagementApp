@@ -14,6 +14,10 @@ import { ToDoTask } from '../../interfaces/to-do-task';
 import { Subscription } from 'rxjs';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
 import { Router } from '@angular/router';
+import {
+    MatSnackBar, MatSnackBarHorizontalPosition,
+    MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 // Interface for data passed to the dialog
 export interface DialogData {
@@ -58,6 +62,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe())
     }
 
+    // Snackbar instance and configuration
+    // for displaying messages
+    private _snackBar = inject(MatSnackBar);
+    horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+    verticalPosition: MatSnackBarVerticalPosition = 'top';
+
     // Method to handle confirmation action
     onConfirm() {
         // Check action type and perform corresponding API call
@@ -66,11 +76,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
                 this.toDoTasksApiService.markToDoTaskComplete(this.toDoTask.id, this.toDoTask).subscribe(
                     {
                         next: () => {
-                            console.log("Success");
                             this.toDoTask.completed = true;
                             this.dialogRef.close(); // Close the dialog
                         },
-                        error: () => console.log("Error")
+                        error: () => {
+                            this.openSnackBar("An error occurred while marking the task as complete.")
+                        }
                     }
                 )
             )
@@ -92,5 +103,15 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
 
     onNoClick(): void {
         this.dialogRef.close(); // Close the dialog
+    }
+
+    // Open a snackbar with the given message for a set duration.
+    openSnackBar(message: string) {
+        let durationInSeconds = 5;
+        this._snackBar.open(message, '', {
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+            duration: durationInSeconds * 1000
+        });
     }
 }
