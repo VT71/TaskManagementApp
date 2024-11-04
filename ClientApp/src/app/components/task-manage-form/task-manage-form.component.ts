@@ -21,7 +21,6 @@ import {
     selector: 'app-task-manage-form',
     standalone: true,
     providers: [
-        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
         provideNativeDateAdapter(),
     ],
     imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, MatButtonModule, ReactiveFormsModule, RouterLink],
@@ -115,8 +114,10 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
     onSubmit() {
         if (this.type === 'add') {
             if (this.taskManageForm.valid) {
+                let dueDate = new Date(Date.parse(this.taskManageForm.get("dueDate")?.getRawValue()));
+                dueDate.setHours(dueDate.getHours() + 2);
                 this.subscriptions.push(
-                    this.toDoTasksApiService.createToDoTask(this.taskManageForm.getRawValue()).subscribe({
+                    this.toDoTasksApiService.createToDoTask({ ...this.taskManageForm.getRawValue(), dueDate }).subscribe({
                         next: (newToDoTask) => {
                             this.router.navigateByUrl(`tasks/edit-task/${newToDoTask.id}`);
                             this.openSnackBar("Task created successfully.")
@@ -129,8 +130,10 @@ export class TaskManageFormComponent implements OnDestroy, OnInit {
             }
         } else if (this.type === 'edit') {
             if (this.taskManageForm.valid) {
+                let dueDate = new Date(Date.parse(this.taskManageForm.get("dueDate")?.getRawValue()));
+                dueDate.setHours(dueDate.getHours() + 2);
                 this.subscriptions.push(
-                    this.toDoTasksApiService.updateToDoTask(this.toDoTask.id, this.taskManageForm.getRawValue()).subscribe({
+                    this.toDoTasksApiService.updateToDoTask(this.toDoTask.id, { ...this.taskManageForm.getRawValue(), dueDate }).subscribe({
                         next: () => {
                             this.openSnackBar("Task updated successfully.")
                         },
