@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
 import { Router } from '@angular/router';
 
+// Interface for data passed to the dialog
 export interface DialogData {
     type: string;
     toDoTask: ToDoTask;
@@ -33,8 +34,9 @@ export interface DialogData {
 export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = []
 
-    private toDoTasksApiService = inject(TodotasksApiService);
+    private toDoTasksApiService = inject(TodotasksApiService); // Inject the service for API calls
 
+    // Inject the dialog reference and the data passed to the dialog
     readonly dialogRef = inject(MatDialogRef<ConfirmationDialogComponent>);
     readonly data = inject<DialogData>(MAT_DIALOG_DATA);
     readonly type = this.data.type;
@@ -43,6 +45,7 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     public title: string = '';
 
     ngOnInit(): void {
+        // Set the dialog title based on the action type
         if (this.type === 'mark-as-complete') {
             this.title = 'Mark this task as Complete ?';
         } else if (this.type === 'delete') {
@@ -51,10 +54,13 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        // Unsubscribe from all active subscriptions
         this.subscriptions.forEach((subscription) => subscription.unsubscribe())
     }
 
+    // Method to handle confirmation action
     onConfirm() {
+        // Check action type and perform corresponding API call
         if (this.type === 'mark-as-complete') {
             this.subscriptions.push(
                 this.toDoTasksApiService.markToDoTaskComplete(this.toDoTask.id, this.toDoTask).subscribe(
@@ -62,7 +68,7 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
                         next: () => {
                             console.log("Success");
                             this.toDoTask.completed = true;
-                            this.dialogRef.close();
+                            this.dialogRef.close(); // Close the dialog
                         },
                         error: () => console.log("Error")
                     }
@@ -74,8 +80,8 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
                     {
                         next: () => {
                             console.log("Success");
-                            this.dialogRef.close();
-                            window.location.reload();
+                            this.dialogRef.close(); // Close the dialog
+                            window.location.reload(); // Reload the page to reflect changes
                         },
                         error: () => console.log("Error")
                     }
@@ -85,6 +91,6 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(); // Close the dialog
     }
 }
