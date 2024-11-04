@@ -3,21 +3,19 @@ import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/materi
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 
+// Custom implementation of Material MatPaginatorIntl for internationalization
 @Injectable()
 export class MyCustomPaginatorIntl implements MatPaginatorIntl {
     changes = new Subject<void>();
 
-    // For internationalization, the `$localize` function from
-    // the `@angular/localize` package can be used.
     firstPageLabel = $localize`First page`;
     itemsPerPageLabel = $localize`Items per page:`;
     lastPageLabel = $localize`Last page`;
 
-    // You can set labels to an arbitrary string too, or dynamically compute
-    // it through other third-party internationalization libraries.
-    nextPageLabel = 'Next page';
-    previousPageLabel = 'Previous page';
+    nextPageLabel = 'Next page'; // Label for the next page button
+    previousPageLabel = 'Previous page'; // Label for the previous page button
 
+    // Generates the range label for the paginator
     getRangeLabel(page: number, pageSize: number, length: number): string {
         if (length === 0) {
             return $localize`Page 1 of 1`;
@@ -36,24 +34,27 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
     styleUrl: './paginator.component.css'
 })
 export class PaginatorComponent implements OnInit, OnDestroy {
-    @Input() toDoTasksCount!: number;
+    @Input() toDoTasksCount!: number; // Input property for the total count of tasks
 
-    private subscriptions: Subscription[] = []
-
+    // Inject necessary services
     private router = inject(Router);
     private route = inject(ActivatedRoute)
 
-    public page: number = 0;
-    public pageSize: number = 10;
+    private subscriptions: Subscription[] = []
 
+    public page: number = 0; // Current page index (0-based)
+    public pageSize: number = 10; // Default number of items per page
+
+    // Handles page change events from the paginator
     handlePageEvent(e: PageEvent) {
-        const queryParams = { ...this.route.snapshot.queryParams };
+        const queryParams = { ...this.route.snapshot.queryParams }; // Get current query params
         queryParams['page'] = e.pageIndex + 1;
         queryParams['pageSize'] = e.pageSize;
-        this.router.navigate([], { queryParams });
+        this.router.navigate([], { queryParams }); // Navigate with updated query params
     }
 
     ngOnInit(): void {
+        // Subscribe to query params to set page and pageSize when component initializes
         this.subscriptions.push(this.route.queryParamMap.subscribe(params => {
             const pageParam = params.get('page');
             const pageSizeParam = params.get('pageSize');
@@ -65,6 +66,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        // Unsubscribe from all active subscriptions
         this.subscriptions.forEach((subscription) => subscription.unsubscribe())
     }
 
