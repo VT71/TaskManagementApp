@@ -45,6 +45,8 @@ public class ToDoTaskControllerTests
         await toDoTaskContext.SaveChangesAsync();
     }
 
+    // GET Tests
+
     [Fact]
     public async Task GetEmptyArrayWhenNoTasksExist()
     {
@@ -125,6 +127,8 @@ public class ToDoTaskControllerTests
         Assert.IsType<NotFoundResult>(toDoTaskResult.Result);
     }
 
+    // Filtering Tests
+
     [Fact]
     public async Task GetAllTasksWhenFilteringByNull()
     {
@@ -194,6 +198,8 @@ public class ToDoTaskControllerTests
         var filteredToDoTasks = Assert.IsAssignableFrom<List<ToDoTask>>(pagedUnit.Items);
         Assert.Empty(filteredToDoTasks);
     }
+
+    // Sorting Tests
 
     [Fact]
     public async Task GetAllTasksWhenSortingByNull()
@@ -372,6 +378,8 @@ public class ToDoTaskControllerTests
         Assert.True(sortedToDoTasks.SequenceEqual(tasksFromDbSet));
     }
 
+    // Pagination Tests
+
     [Fact]
     public async Task GetTasksFromFirstPageWithDefaultPageSizeWhenNoneProvided()
     {
@@ -440,6 +448,8 @@ public class ToDoTaskControllerTests
         Assert.Empty(paginationUnit.Items);
     }
 
+    // POST Tests
+
     [Fact]
     public async Task GetNewTaskWhenValidTaskCreated()
     {
@@ -472,28 +482,6 @@ public class ToDoTaskControllerTests
     }
 
     [Fact]
-    public void DueDatesInThePastNotValidated()
-    {
-        // Arrange: Create an instance of the FutureDateAttribute validator.
-        FutureDateAttribute futureDateAttribute = new FutureDateAttribute();
-
-        // Create a new ToDoTask with a due date set in the past.
-        ToDoTask newToDoTask = new ToDoTask
-        {
-            Title = "A new task",
-            Description = "A new description",
-            DueDate = DateTime.Parse("2022-10-27T15:23:59.689Z"),
-            Completed = false
-        };
-
-        // Act: Validate the due date using the FutureDateAttribute.
-        bool dueDateInTheFuture = futureDateAttribute.IsValid(newToDoTask.DueDate);
-
-        // Assert
-        Assert.False(dueDateInTheFuture);
-    }
-
-    [Fact]
     public async Task GetBadRequestWhenCreatingInvalidTask()
     {
         // Arrange: Create an instance of the database context.
@@ -521,6 +509,32 @@ public class ToDoTaskControllerTests
         // Assert: Verify that the result is a BadRequest response.
         Assert.IsType<BadRequestObjectResult>(result.Result);
     }
+
+    // Due Date Validator Tests
+
+    [Fact]
+    public void DueDatesInThePastNotValidated()
+    {
+        // Arrange: Create an instance of the FutureDateAttribute validator.
+        FutureDateAttribute futureDateAttribute = new FutureDateAttribute();
+
+        // Create a new ToDoTask with a due date set in the past.
+        ToDoTask newToDoTask = new ToDoTask
+        {
+            Title = "A new task",
+            Description = "A new description",
+            DueDate = DateTime.Parse("2022-10-27T15:23:59.689Z"),
+            Completed = false
+        };
+
+        // Act: Validate the due date using the FutureDateAttribute.
+        bool dueDateInTheFuture = futureDateAttribute.IsValid(newToDoTask.DueDate);
+
+        // Assert
+        Assert.False(dueDateInTheFuture);
+    }
+
+    // PUT Tests
 
     [Fact]
     public async Task GetNoContentWhenUpdatingValidTask()
@@ -665,6 +679,8 @@ public class ToDoTaskControllerTests
         // Assert: Verify that the result is a NotFound response.
         Assert.IsType<NotFoundResult>(result);
     }
+
+    // DELETE Tests
 
     [Fact]
     public async Task GetNoContentWhenDeletingTaskWithValidId()
