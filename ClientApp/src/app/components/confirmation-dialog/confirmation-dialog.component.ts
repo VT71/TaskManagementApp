@@ -1,5 +1,4 @@
-import { Component, inject, model, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
     MAT_DIALOG_DATA,
@@ -13,7 +12,6 @@ import {
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { Subscription } from 'rxjs';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
-import { Router } from '@angular/router';
 import {
     MatSnackBar, MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,

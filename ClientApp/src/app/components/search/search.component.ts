@@ -46,10 +46,8 @@ export class SearchComponent implements OnDestroy, OnInit {
     // Handle form submission
     onSubmit() {
         if (this.searchForm.valid) {
-            console.log("Form valid")
             let criteriaToSend = this.searchForm.get("searchCriteria")?.value; // Get current search criteria
             if (criteriaToSend && criteriaToSend !== this.prevCriteria) {
-                console.log("Form valid 1")
                 this.prevCriteria = criteriaToSend;
                 const queryParams = { ...this.route.snapshot.queryParams }; // Preserve existing query parameters
                 queryParams['search'] = criteriaToSend;
@@ -63,7 +61,6 @@ export class SearchComponent implements OnDestroy, OnInit {
     onClear(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         if (filterValue === '' && filterValue !== this.prevCriteria) {
-            console.log("Form valid 2")
             this.prevCriteria = filterValue;
             this.router.navigate([], {
                 queryParams: {

@@ -1,13 +1,13 @@
 import { AfterViewInit, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatSort, MatSortable, MatSortModule, Sort } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ToDoTask } from '../../interfaces/to-do-task';
 import { TodotasksApiService } from '../../services/todotasks-api.service';
-import { forkJoin, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
     MatSnackBar, MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
@@ -29,9 +29,6 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 })
 
 export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
-    // displayedColumns: string[] = ['id', 'title', 'description', 'dueDate', 'completed', 'options-menu'];
-    // dataSource: MatTableDataSource<ToDoTask> = new MatTableDataSource();
-
     // @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) matSort!: MatSort;
 
@@ -78,8 +75,6 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        // this.dataSource.paginator = this.paginator;
-        // this.dataSource.sort = this.sort;
         // Set initial sort state if provided by query parameters.
         if (this.sortDirectionParamValue && this.sortByParamValue) {
             this.matSort.active = this.sortByParamValue;
@@ -103,7 +98,6 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
                 next: (pagedResult) => {
                     this.toDoTasks = pagedResult.items;
                     this.toDoTasksCount = pagedResult.totalCount;
-                    // this.updateTableSource(filteredToDoTasks);
                 },
                 error: () => {
                     this.openSnackBar("An error occurred while getting the tasks.")
@@ -111,28 +105,6 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
             })
         );
     }
-
-
-    // handlePageEvent(e: PageEvent) {
-    //     console.log("Page : " + e.pageIndex)
-    //     this.pageEvent = e;
-    //     this.length = e.length;
-    //     this.pageSize = e.pageSize;
-    //     this.pageIndex = e.pageIndex;
-    //     const queryParams = { ...this.route.snapshot.queryParams };
-    //     queryParams['page'] = criteriaToSend;
-    //     this.router.navigate([], { queryParams });
-    // }
-
-    // updateTableSource(toDoTasks: ToDoTask[]) {
-    //     if (this.dataSource) {
-    //         console.log("UPDATING DATA")
-    //         this.dataSource.data = toDoTasks;
-    //     } else {
-    //         this.dataSource = new MatTableDataSource();
-    //         this.dataSource.data = toDoTasks;
-    //     }
-    // }
 
     // Open a confirmation dialog for the specified action type and task.
     openDialog(type: string, toDoTask: ToDoTask): void {
@@ -184,15 +156,6 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
         }
         return;
     }
-
-    // applyFilter(event: Event) {
-    //     const filterValue = (event.target as HTMLInputElement).value;
-    //     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    //     if (this.dataSource.paginator) {
-    //         this.dataSource.paginator.firstPage();
-    //     }
-    // }
 
     convertDateToReadable(date: Date) {
         return date.toLocaleDateString('en-GB');

@@ -81,7 +81,7 @@ namespace TaskService.Controllers
             {
                 return NotFound();
             }
-
+            
             await _service.UpdateToDoTask(toDoTask);
 
             return NoContent();

@@ -22,7 +22,7 @@ public class ToDoTaskService
     // Retrieves a specific ToDoTask by its ID, or null if not found.
     public async Task<ToDoTask?> GetById(long id)
     {
-        return await _context.ToDoTasks.FindAsync(id);
+        return await _context.ToDoTasks.AsNoTracking().FirstOrDefaultAsync(toDoTask => toDoTask.Id == id);
     }
 
     // Retrieves ToDoTasks based on search criteria, including filtering, sorting, and pagination.
