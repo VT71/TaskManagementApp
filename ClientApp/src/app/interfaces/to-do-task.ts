@@ -1,3 +1,6 @@
+/**
+ * Interface representing a single ToDoTask.
+ */
 export interface ToDoTask {
     id: number;
     title: string;
