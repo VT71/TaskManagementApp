@@ -105,7 +105,9 @@ export class TaskTableComponent implements AfterViewInit, OnInit, OnDestroy {
                     this.toDoTasksCount = pagedResult.totalCount;
                     // this.updateTableSource(filteredToDoTasks);
                 },
-                error: () => console.log("Error")
+                error: () => {
+                    this.openSnackBar("An error occurred while getting the tasks.")
+                }
             })
         );
     }
