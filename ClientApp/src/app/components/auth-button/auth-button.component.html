@@ -1,4 +1,6 @@
+<!-- Check if the user is authenticated using the async pipe -->
 @if(auth.isAuthenticated$ | async;){
+<!-- Log Out Button: Displays if the user is authenticated -->
 <button
   mat-fab
   aria-label="Log Out Button"
@@ -9,6 +11,7 @@
   <mat-icon>logout</mat-icon>
 </button>
 } @else {
+<!-- Log In Button: Displays if the user is not authenticated -->
 <button mat-fab aria-label="Log In Button" (click)="auth.loginWithRedirect()">
   <mat-icon>login</mat-icon>
 </button>
